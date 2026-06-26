@@ -1,41 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="relative bg-indigo-900 text-white py-24 px-4 bg-cover bg-center" style="background-image: linear-gradient(rgba(30, 27, 75, 0.85), rgba(30, 27, 75, 0.85)), url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80');">
-    <div class="max-w-4xl mx-auto text-center">
-        <h1 data-lang="hero_title" class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">Хонаи орзуҳои худро бо Comfort Home пайдо кунед</h1>
-        <p data-lang="hero_sub" class="text-lg md:text-xl text-indigo-200 mb-8">Беҳтарин амволҳо ва хонаҳо барои иҷора ва фурӯш дар Тоҷикистон.</p>
-        
-        <form method="GET" action="{% url 'home' %}" class="bg-white p-4 rounded-2xl shadow-xl max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-3 items-end text-left">
-    
-    <div class="relative w-full">
-        <label data-lang="label_location" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Шаҳр</label>
-        <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Шаҳр..." class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
-    </div>
+<div class="relative bg-indigo-900 text-white py-20 px-4 bg-cover bg-center overflow-hidden" style="background-image: linear-gradient(rgba(30, 27, 75, 0.85), rgba(30, 27, 75, 0.85)), url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80');">
 
-    <div class="relative w-full">
-        <label data-lang="label_district" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Ноҳия</label>
-        <input type="text" name="qu" value="{{ request.GET.qu|default:'' }}" placeholder="Ноҳия..." class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
-    </div>
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10 lg:gap-4">
 
-    <div class="relative w-full">
-        <label data-lang="label_price_from" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Нарх аз</label>
-        <input type="number" name="min_price" value="{{ request.GET.min_price|default:'' }}" placeholder="Мин" class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
-    </div>
+        <!-- Тарафи чап — матн ва формаи ҷустуҷӯ (марказӣ) -->
+        <div class="w-full lg:w-3/5 flex flex-col items-center text-center">
+            <h1 data-lang="hero_title" class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">Хонаи орзуҳои худро бо Comfort Home пайдо кунед</h1>
+            <p data-lang="hero_sub" class="text-lg md:text-xl text-indigo-200 mb-8 max-w-2xl">Беҳтарин амволҳо ва хонаҳо барои иҷора ва фурӯш дар Тоҷикистон.</p>
 
-    <div class="relative w-full">
-        <label data-lang="label_price_to" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Нарх то</label>
-        <input type="number" name="max_price" value="{{ request.GET.max_price|default:'' }}" placeholder="Макс" class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
-    </div>
+            <form method="GET" action="{% url 'home' %}" class="bg-white p-4 rounded-2xl shadow-xl grid grid-cols-1 sm:grid-cols-2 gap-3 items-end text-left w-full max-w-2xl">
 
-    <div class="w-full">
-        <button type="submit" data-lang="search_btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-[9px] rounded-xl font-semibold transition text-sm flex items-center justify-center gap-2 shadow-md shadow-indigo-200">
-            <i class="fa-solid fa-magnifying-glass"></i> Ҷустуҷӯ
-        </button>
-    </div>
-</form>
+                <div class="relative w-full">
+                    <label data-lang="label_location" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Шаҳр</label>
+                    <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Шаҳр..." class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
+                </div>
+
+                <div class="relative w-full">
+                    <label data-lang="label_district" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Ноҳия</label>
+                    <input type="text" name="qu" value="{{ request.GET.qu|default:'' }}" placeholder="Ноҳия..." class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
+                </div>
+
+                <div class="relative w-full">
+                    <label data-lang="label_price_from" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Нарх аз</label>
+                    <input type="number" name="min_price" value="{{ request.GET.min_price|default:'' }}" placeholder="Мин" class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
+                </div>
+
+                <div class="relative w-full">
+                    <label data-lang="label_price_to" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Нарх то</label>
+                    <input type="number" name="max_price" value="{{ request.GET.max_price|default:'' }}" placeholder="Макс" class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
+                </div>
+
+                <div class="w-full sm:col-span-2">
+                    <button type="submit" data-lang="search_btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-[9px] rounded-xl font-semibold transition text-sm flex items-center justify-center gap-2 shadow-md shadow-indigo-200">
+                        <i class="fa-solid fa-magnifying-glass"></i> Ҷустуҷӯ
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Тарафи рост — акси даврзананда -->
+        <div class="w-full lg:w-2/5 flex items-center justify-center">
+            <div class="relative w-56 h-56 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center" style="animation: spin-slow 26s linear infinite;">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80"
+                     alt="Бинои баландошёна"
+                     class="w-[88%] h-[88%] rounded-full object-cover border-4 border-white/30"
+                     style="animation: spin-slow-reverse 26s linear infinite;">
+            </div>
+        </div>
+
     </div>
 </div>
+
+<style>
+    @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spin-slow-reverse { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+</style>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <h2 data-lang="sections_title" class="text-3xl font-bold text-gray-950 mb-8 border-b-2 border-indigo-600 inline-block pb-2">Амволҳои охирин</h2>
@@ -43,8 +64,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for property in propertys %}
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
-            
-            <div class="relative h-56  bg-gray-200">
+            <div class="relative h-56 bg-gray-200">
                 {% if property.images.all %}
                     <div class="flex overflow-x-auto space-x-4 pb-4 mb-8">
                         {% for img in property.images.all %}
@@ -62,13 +82,8 @@
                     {{ property.get_property_type_display }}
                 </span>
             </div>
-            <div>
-
-                <p>......</p><br>
-                
-                
-                
-            </div>
+            <p>......</p>
+            <p>......</p>
 
             <div class="p-6">
                 <div class="text-2xl font-bold text-indigo-600 mb-2">{{ property.price }} TJS</div>
@@ -89,21 +104,11 @@
                     
                     {% if user.is_authenticated %}
                         {% if property.owner != user %}
-                            <button type="button" 
-                                    data-id="{{ property.id }}" 
-                                    class="favorite-btn p-2.5 rounded-xl transition flex items-center justify-center border
-                                    {% if property.id in favorite_property_ids %}
-                                        bg-red-50 text-red-500 border-red-200 is-favorite
-                                    {% else %}
-                                        bg-gray-100 text-gray-500 border-transparent hover:bg-red-50 hover:text-red-500
-                                    {% endif %}"
-                                    title="Маҳбубҳо">
+                            <button type="button" data-id="{{ property.id }}" class="favorite-btn p-2.5 rounded-xl transition flex items-center justify-center border {% if property.id in favorite_property_ids %}bg-red-50 text-red-500 border-red-200 is-favorite{% else %}bg-gray-100 text-gray-500 border-transparent hover:bg-red-50 hover:text-red-500{% endif %}" title="Маҳбубҳо">
                                 <i class="{% if property.id in favorite_property_ids %}fa-solid text-red-500{% else %}fa-regular{% endif %} fa-heart text-lg"></i>
                             </button>
                         {% else %}
-                            <span data-lang="my_ad" class="bg-indigo-50 text-indigo-600 px-3 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap" title="Ин эълони худи шумост">
-                                Эълони ман
-                            </span>
+                            <span data-lang="my_ad" class="bg-indigo-50 text-indigo-600 px-3 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap" title="Ин эълони худи шумост">Эълони ман</span>
                         {% endif %}
                     {% else %}
                         <a href="{% url 'login' %}" class="bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500 p-2.5 rounded-xl transition flex items-center justify-center">
@@ -111,8 +116,6 @@
                         </a>
                     {% endif %}
                 </div>
-
-                
             </div>
         </div>
         {% empty %}
