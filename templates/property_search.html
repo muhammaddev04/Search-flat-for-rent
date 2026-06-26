@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 data-lang="search_res_title" class="text-3xl font-bold text-gray-950 mb-8 border-b-2 border-indigo-600 inline-block pb-2">Натиҷаҳои ҷустуҷӯ</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for property in propertys %}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
+            <div class="relative h-48 bg-gray-200">
+                {% if property.images.all %}
+                    <img src="{{ property.images.first.image.url }}" class="w-full h-full object-cover">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-gray-400"><i class="fa-regular fa-image text-3xl"></i></div>
+                {% endif %}
+            </div>
+            <div class="p-5">
+                <div class="text-xl font-bold text-indigo-600 mb-1">{{ property.price }} TJS</div>
+                <h3 class="text-lg font-bold text-gray-900 truncate">{{ property.title }}</h3>
+                <p class="text-gray-500 text-sm mt-1 mb-4"><i class="fa-solid fa-location-dot"></i> {{ property.city }}</p>
+                
+                <a href="{% url 'property_detail' property.pk %}" data-lang="details" class="block text-center bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-semibold py-2 rounded-xl transition text-sm">
+                    Муфассал
+                </a>
+            </div>
+            <td class="p-4 text-right space-x-2">
+                <a href="{% url 'update_property' property.id %}" class="inline-block text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition" title="Таҳрир">
+                    <i class="fa-regular fa-pen-to-square text-base"></i>
+                </a>
+                <a href="{% url 'delete_property' property.id %}" class="inline-block text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition" title="Нест кардан">
+                    <i class="fa-regular fa-trash-can text-base"></i>
+                </a>
+            </td>
+        </div>
+        {% empty %}
+        <div class="col-span-3 text-center py-12">
+            <p data-lang="no_properties" class="text-gray-500 text-lg">Ҳеҷ амволе ёфт нашуд.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

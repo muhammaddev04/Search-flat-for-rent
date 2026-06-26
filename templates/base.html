@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comfort Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 flex flex-col min-h-screen">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <div class="flex items-center">
+                <a href="{% url 'home' %}" class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
+                    <i class="fa-solid fa-building-user"></i> Comfort Home
+                </a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <a href="{% url 'home' %}" data-lang="nav_home" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition">Асосӣ</a>
+                <a href="{% url 'about' %}" data-lang="nav_about" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition">Дар бораи мо</a>
+                <a href="{% url 'property_list' %}" data-lang="nav_properties" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition">Амволҳо</a>
+
+                <div class="h-6 w-px bg-gray-200 mx-2"></div> {% if user.is_authenticated %}
+                    {% if not user.is_landlord %}
+                        <a href="{% url 'favorite_list' %}" data-lang="favorites_btn" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 hover:bg-red-50 text-gray-700 hover:text-red-600 font-medium transition text-sm">
+                            <i class="fa-solid fa-heart"></i> Маҳбубҳо
+                        </a>
+                    {% endif %}
+
+                    <a href="{% url 'create_property' %}" data-lang="nav_add" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 font-medium transition text-sm">Эълон +</a>
+                    <a href="{% url 'create_propertyimages' %}" data-lang="add_images" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 font-medium transition text-sm">Иловаи сурат +</a>
+                    
+                    <a href="{% url 'logout' %}" data-lang="logout_btn" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 font-medium transition text-sm">Баромад</a>
+                {% else %}
+                    <a href="{% url 'login' %}" data-lang="login_btn" class="text-gray-600 hover:text-indigo-600 px-4 py-2 font-medium transition">Вуруд</a>
+                    <a href="{% url 'register' %}" data-lang="nav_register" class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 font-medium transition text-sm">Регистрация</a>
+                {% endif %}
+
+                <select id="langSelector" class="bg-gray-50 border border-gray-200 text-gray-700 py-2 px-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer text-sm font-semibold ml-2">
+                    <option value="tg">🇹🇯 ТҶ</option>
+                    <option value="ru">🇷🇺 РУ</option>
+                    <option value="en">🇬🇧 EN</option>
+                </select>
+
+                <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md ml-2" title="{{ user.username }}">
+                    {{ user.username|slice:":1"|upper }}
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <main class="flex-grow">
+        {% block content %} {% endblock %}
+    </main>
+
+    <footer class="bg-gray-900 text-white mt-16">
+    <div class="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div>
+            <h2 class="text-2xl font-bold text-indigo-400 mb-4">Comfort Home</h2>
+            <p data-lang="footer_desc" class="text-gray-400">
+                Беҳтарин платформа барои ҷустуҷӯ ва дарёфти амволи ғайриманқул дар Тоҷикистон.
+            </p>
+        </div>
+
+        <div>
+            <h3 data-lang="footer_links" class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Истинодҳо</h3>
+            <ul class="space-y-2 text-gray-400">
+                <li><a href="/" data-lang="home_page" class="hover:text-indigo-400">Саҳифаи асосӣ</a></li>
+                <li><a href="{% url 'about' %}" data-lang="terms_of_use" class="hover:text-indigo-400">Дар бораи мо</a></li>
+            </ul>
+        </div>
+        <div>
+            
+            <div class="space-y-3 text-gray-400">
+                <h3 data-lang="footer_contact" class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Тамос бо мо</h3>
+            <p data-lang="footer_rights" class="text-gray-500 text-sm mt-8">&copy; 2026 Comfort Home. Ҳамаи ҳуқуқҳо ҳифз шудаанд.</p>
+                <p class="flex items-center gap-2">
+                    <i class="fa-solid fa-envelope"></i> info@comforthome.tj
+                </p>
+                <div class="flex gap-4 mt-4">
+                    <a href="#" class="text-2xl hover:text-green-500 transition"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#" class="text-2xl hover:text-blue-500 transition"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="text-2xl hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+    
+    </div>
+</footer>
+
+    <script>
+    const translations = {
+        tg: {
+            favorites_btn: "Маҳбубҳо", 
+            nav_home: "Асосӣ", 
+            nav_about: "Дар бораи мо", 
+            nav_properties: "Амволҳо", 
+            nav_add: "Эълон +", 
+            nav_logout: "Хурӯҷ", 
+            nav_login: "Вуруд", 
+            nav_register: "Сабти ном", 
+            footer_text: "Ҳамаи ҳуқуқҳо ҳифз шудаанд.",
+            hero_title: "Хонаи орзуҳои худро бо Comfort Home пайдо кунед",
+            hero_sub: "Беҳтарин амволҳо ва хонаҳо барои иҷора  дар Тоҷикистон.",
+            search_btn: "Ҷустуҷӯ",
+            sections_title: "Амволҳои охирин",
+            rooms: "Ҳуҷраҳо *",
+            area: "Масоҳат (м²) *",
+            details: "Муфассал",
+            no_properties: "Ҳеҷ амволе ёфт нашуд.",
+            about_title: "Дар бораи Comfort Home",
+            about_subtitle: "Мо ба ... кӯмак мерасонем.",
+            stat_clients: "Мизоҷони қаноатманд", 
+            stat_properties: "Амволҳои фаъол", 
+            stat_years: "Сол таҷриба",
+            about_why_title: "Чаро маҳз мо?",
+            about_why_text: "Платформаи мо ба соҳибони амвол имкон медиҳад...",
+            about_f1_title: "Амнияти Пурра", 
+            about_f1_text: "Ҳамаи соҳибони амвол ва эълонҳо санҷида мешаванд.",
+            search_res_title: "Натиҷаҳои ҷустуҷӯ",
+            owner: "Соҳибмулк",
+            description: "Тавсиф",
+            my_prop_title: "Эълонҳои ман",
+            table_title: "Ном *", 
+            table_price: "Нарх (TJS) *", 
+            table_city: "Шаҳр", 
+            table_actions: "Амалҳо",
+            form_prop_title: "Формаи амвол", 
+            save_btn: "Захира кардан",
+            delete_title: "Тасдиқи несткунӣ", 
+            delete_sub: "Оё шумо мутмаин ҳастед?", 
+            cancel_btn: "Бекор кардан",
+            select_prop: "Интихоби амвол", 
+            select_file: "Суратро интихоб кунед",
+            logout_btn: "Баромад",
+            
+            // НАВ:
+            label_type: "Намуди амвол *",
+            opt_select: "Интихоб кунед",
+            opt_apartment: "Квартира",
+            opt_house: "Ҳавлигӣ",
+            opt_commercial: "Тиҷоратӣ",
+            label_district: "Ноҳия *",
+            label_address: "Суроғаи дақиқ *",
+            label_amenities: "Шароитҳо *",
+            label_available: "Барои иҷора/фурӯш омода аст",
+
+            label_location: "Ҷойгиршавӣ",
+            label_price_from: "Нарх аз (TJS)",
+            label_price_to: "Нарх то (TJS)",
+            my_ad: "Эълони ман",
+            edit_btn: "Таҳрир",
+            delete_btn: "Нест кардан",
+            contact_owner: "Тамос бо соҳибхона",
+            no_phone: "Рақами телефон мавҷуд нест",
+            footer_desc: "Лучшая платформа для поиска и покупки недвижимости в Таджикистане.",
+            footer_links: "Ссылки",
+            home_page: "Главная страница",
+            terms_of_use: "Пользовательское соглашение",
+            footer_contact: "Свяжитесь с нами",
+            footer_rights: "2026 Comfort Home. Все права защищены.",
+
+            footer_desc: "Беҳтарин платформа барои ҷустуҷӯ ва дарёфти амволи ғайриманқул дар Тоҷикистон.",
+            footer_links: "Истинодҳо",
+            home_page: "Саҳифаи асосӣ",
+            terms_of_use: "Дар бораи мо",
+            footer_contact: "Тамос бо мо",
+            footer_rights: "2026 Comfort Home. Ҳамаи ҳуқуқҳо ҳифз шудаанд.",
+            add_images: " Иловаи сурат +",
+            floor:"Ошёна",
+
+            login_h2: "Вуруд ба система",
+            login_user: "Номи корбарӣ ё Email",
+            login_pass: "Парол",
+            login_btn: "Вуруд",
+
+            error_invalid_credentials: "Номи корбар ё рамз нодуруст аст!",
+            error_not_active: "Аввал почтаи худро тасдиқ кунед!",
+
+            nav_register: "Сабти ном",
+
+
+            fav_sub_title: "Рӯйхати амволҳое, ки ба шумо писанд омадаанд.",
+            no_fav_properties: "Шумо ҳеҷ амволеро ба маҳбубҳо илова накардаед.",
+            back_to_home: "Саҳифаи асосӣ"
+        },
+        ru: {
+            favorites_btn: "Избранное",
+            nav_home: "Главная", 
+            nav_about: "О нас", 
+            nav_properties: "Недвижимость", 
+            nav_add: "Объявление +", 
+            nav_logout: "Выход", 
+            nav_login: "Вход", 
+            nav_register: "Регистрация", 
+            footer_text: "Все права защищены.",
+            hero_title: "Найдите дом своей мечты с Comfort Home",
+            hero_sub: "Лучшая недвижимость для аренды в Таджикистане.",
+            search_btn: "Поиск",
+            sections_title: "Последние объявления",
+            rooms: "Комнаты *",
+            area: "Площадь (м²) *",
+            details: "Подробнее",
+            no_properties: "Объявлений не найдено.",
+            about_title: "О компании Comfort Home",
+            about_subtitle: "Мы помогаем вам найти лучшие...",
+            stat_clients: "Довольных клиентов", 
+            stat_properties: "Активных объектов", 
+            stat_years: "Лет опыта",
+            about_why_title: "Почему именно мы?",
+            about_why_text: "Наша платформа позволяет владельцам...",
+            about_f1_title: "Полная Безопасность", 
+            about_f1_text: "Все владельцы и объявления проверяются вручную.",
+            search_res_title: "Результаты поиска",
+            owner: "Собственник",
+            description: "Описание",
+            my_prop_title: "Мои объявления",
+            table_title: "Название *", 
+            table_price: "Цена (TJS) *", 
+            table_city: "Город", 
+            table_actions: "Действия",
+            form_prop_title: "Форма объявления", 
+            save_btn: "Сохранить",
+            delete_title: "Подтверждение удаления", 
+            delete_sub: "Вы уверены?", 
+            cancel_btn: "Отмена",
+            select_prop: "Выберите объект", 
+            select_file: "Выберите фото",
+            logout_btn: "Выход",
+            
+            // НАВ:
+            label_type: "Тип недвижимости *",
+            opt_select: "Выберите",
+            opt_apartment: "Квартира",
+            opt_house: "Дом / Участок",
+            opt_commercial: "Коммерческая",
+            label_district: "Район *",
+            label_address: "Точный адрес *",
+            label_amenities: "Удобства *",
+            label_available: "Доступно для аренды/продажи",
+
+            label_location: "Местоположение",
+            label_price_from: "Цена от (TJS)",
+            label_price_to: "Цена до (TJS)",
+            my_ad: "Моё объявление",
+            edit_btn: "Редактировать",
+            delete_btn: "Удалить",
+            contact_owner: "Связаться с владельцем",
+            no_phone: "Номер телефона не указан",
+            footer_desc: "Лучшая платформа для поиска и покупки недвижимости в Таджикистане.",
+            footer_links: "Ссылки",
+            home_page: "Главная страница",
+            terms_of_use: "О нас",
+            footer_contact: "Свяжитесь с нами",
+            footer_rights: "2026 Comfort Home. Все права защищены.",
+            add_images: "Добавить фото +",
+
+            login_h2: "Вход в систему",
+            login_user: "Имя пользователя или Email",
+            login_pass: "Пароль",
+            login_btn: "Войти",
+
+            error_invalid_credentials: "Неверное имя пользователя или пароль!",
+            error_not_active: "Пожалуйста, подтвердите вашу почту!",
+            floor:"Этаж",
+
+            nav_register: "Регистрация",
+
+            floor:"Этаж",
+
+            fav_sub_title: "Список объектов недвижимости, которые вам понравились.",
+            no_fav_properties: "Вы не добавили ни одного объекта в избранное.",
+            back_to_home: "На главную"
+        },
+        en: {
+            favorites_btn: "Favorites",
+            nav_home: "Home", 
+            nav_about: "About Us", 
+            nav_properties: "Properties", 
+            nav_add: "Add Post +", 
+            nav_logout: "Logout", 
+            nav_login: "Login", 
+            nav_register: "Register", 
+            footer_text: "All rights reserved.",
+            hero_title: "Find Your Dream Home with Comfort Home",
+            hero_sub: "The best real estate and apartments for rent  in Tajikistan.",
+            search_btn: "Search",
+            sections_title: "Latest Properties",
+            rooms: "Rooms *",
+            area: "Area (m²) *",
+            details: "Details",
+            no_properties: "No properties found.",
+            about_title: "About Comfort Home",
+            about_subtitle: "We help you find the best...",
+            stat_clients: "Satisfied Clients", 
+            stat_properties: "Active Properties", 
+            stat_years: "Years of Experience",
+            about_why_title: "Why Choose Us?",
+            about_why_text: "Our platform allows property owners...",
+            about_f1_title: "Full Security", 
+            about_f1_text: "All property owners and listings are verified.",
+            search_res_title: "Search Results",
+            owner: "Owner",
+            description: "Description",
+            my_prop_title: "My Listings",
+            table_title: "Title *", 
+            table_price: "Price (TJS) *", 
+            table_city: "City", 
+            table_actions: "Actions",
+            form_prop_title: "Property Form", 
+            save_btn: "Save",
+            delete_title: "Confirm Delete", 
+            delete_sub: "Are you absolutely sure?", 
+            cancel_btn: "Cancel",
+            select_prop: "Select Property", 
+            select_file: "Choose Image File",
+            logout_btn: "Logout",
+            
+            // НАВ:
+            label_type: "Property Type *",
+            opt_select: "Select",
+            opt_apartment: "Apartment",
+            opt_house: "House",
+            opt_commercial: "Commercial",
+            label_district: "District *",
+            label_address: "Exact Address *",
+            label_amenities: "Amenities *",
+            label_available: "Available for rent/sale",
+            contact_owner: "Contact Owner",
+            no_phone: "Phone number not provided",
+
+            label_location: "Location",
+            label_price_from: "Price from (TJS)",
+            label_price_to: "Price to (TJS)",
+            my_ad: "My ad",
+            edit_btn: "Edit",
+            delete_btn: "Delete",
+
+            footer_desc: "The best platform for searching and buying real estate in Tajikistan.",
+            footer_links: "Links",
+            home_page: "Home Page",
+            terms_of_use: "About Us",
+            footer_contact: "Contact Us",
+            footer_rights: "2026 Comfort Home. All rights reserved.",
+            add_images: "Add photo +",
+
+            login_h2: "Sign In",
+            login_user: "Username or Email",
+            login_pass: "Password",
+            login_btn: "Login",
+
+            error_invalid_credentials: "Invalid username or password!",
+            error_not_active: "Please verify your email!",
+            floor:"floor",
+
+            nav_register: "Register",
+
+            fav_sub_title: "List of properties that you liked.",
+            no_fav_properties: "You have not added any properties to your favorites.",
+            back_to_home: "Back to Home"
+        }
+    };
+
+    function applyTranslations() {
+        const lang = localStorage.getItem('selectedLang') || 'tg';
+        document.getElementById('langSelector').value = lang;
+
+        document.querySelectorAll('[data-lang]').forEach(element => {
+            const key = element.getAttribute('data-lang');
+            if (translations[lang] && translations[lang][key]) {
+                element.innerText = translations[lang][key];
+            }
+        });
+    }
+
+    document.getElementById('langSelector').addEventListener('change', (e) => {
+        localStorage.setItem('selectedLang', e.target.value);
+        applyTranslations();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        applyTranslations();
+    });
+    </script>
+</body>
+</html>

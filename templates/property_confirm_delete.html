@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-md border border-gray-100 mt-20 text-center">
+    <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <h2 data-lang="delete_title" class="text-xl font-bold text-gray-900 mb-2">Тасдиқи несткунӣ</h2>
+    <p data-lang="delete_sub" class="text-gray-500 text-sm mb-6">Оё шумо мутмаин ҳастед, ки ин эълонро нест кардан мехоҳед? Ин амалро барқарор карда намешавад.</p>
+    
+    <form method="POST" class="flex gap-4">
+        {% csrf_token %}
+        <button type="submit" data-lang="confirm_btn" class="flex-grow bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 rounded-xl transition">Нест кардан</button>
+        <a href="{% url 'property_list' %}" data-lang="cancel_btn" class="flex-grow bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl transition block pt-3 text-sm">Бекор кардан</a>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 py-12">
+    <div class="flex justify-between items-center mb-8">
+        <h2 data-lang="my_prop_title" class="text-2xl font-bold text-gray-900">Эълонҳои ман</h2>
+        <a href="{% url 'create_property' %}" data-lang="nav_add" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+            Эълон +
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm font-semibold">
+                    <th class="p-4" data-lang="table_title">Ном</th>
+                    <th class="p-4" data-lang="table_price">Нарх</th>
+                    <th class="p-4" data-lang="table_city">Шаҳр</th>
+                    <th class="p-4 text-right" data-lang="table_actions">Амалҳо</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50 text-gray-700">
+                {% for property in propertys %}
+                <tr class="hover:bg-gray-50/50 transition">
+                    <td class="p-4 font-semibold text-gray-900">{{ property.title }}</td>
+                    <td class="p-4 text-indigo-600 font-bold">{{ property.price }} TJS</td>
+                    <td class="p-4 text-sm text-gray-500">{{ property.city }}</td>
+                    <td class="p-4 text-sm text-gray-500">{{ property.district }}</td>
+                    <td class="p-4 text-right space-x-2">
+                        <a href="{% url 'update_property' property.pk %}" class="text-indigo-600 hover:text-indigo-900 font-medium text-sm"><i class="fa-regular fa-pen-to-square"></i></a>
+                        <a href="{% url 'delete_property' property.pk %}" class="text-red-500 hover:text-red-700 font-medium text-sm"><i class="fa-regular fa-trash-can"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-gray-400" data-lang="no_propertys">Ҳеҷ амволе ёфт нашуд.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

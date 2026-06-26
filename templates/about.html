@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Блоки Асосӣ (Заголовок) -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+        <h1 data-lang="about_title" class="text-4xl font-extrabold text-gray-900 mb-4">
+            Дар бораи Comfort Home
+        </h1>
+        <p data-lang="about_subtitle" class="text-lg text-gray-600">
+            Мо ба шумо барои пайдо кардани беҳтарин ва қулайтарин хонаҳо ва амволҳо дар Тоҷикистон кӯмак мерасонем.
+        </p>
+    </div>
+
+    <!-- Намоиши Омор (Stats) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-20">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div class="text-4xl font-bold text-indigo-600 mb-2">10,000+</div>
+            <p data-lang="stat_clients" class="text-gray-500 font-medium">Мизоҷони қаноатманд</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div class="text-4xl font-bold text-indigo-600 mb-2">5,000+</div>
+            <p data-lang="stat_properties" class="text-gray-500 font-medium">Амволҳои фаъол</p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div class="text-4xl font-bold text-indigo-600 mb-2">15+</div>
+            <p data-lang="stat_years" class="text-gray-500 font-medium">Сол таҷриба</p>
+        </div>
+    </div>
+
+    <!-- Платформаи Мо ва Хизматрасониҳо -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80" alt="About Us" class="rounded-2xl shadow-md w-full h-auto object-cover">
+        </div>
+        <div class="space-y-6">
+            <h2 data-lang="about_why_title" class="text-3xl font-bold text-gray-900">
+                Чаро маҳз мо?
+            </h2>
+            <p data-lang="about_why_text" class="text-gray-600 leading-relaxed">
+                Платформаи мо ба соҳибони амвол имкон медиҳад, ки эълонҳои худро зуд ҷойгир кунанд, ва ба иҷорагирон имкон медиҳад, ки хонаи дилхоҳашонро пайдо кунанд.
+            </p>
+            
+            <!-- Корти хурди хусусиятҳо -->
+            <div class="flex items-start gap-4 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
+                <div class="bg-indigo-100 text-indigo-600 p-3 rounded-xl flex-shrink-0">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <div>
+                    <h4 data-lang="about_f1_title" class="font-bold text-gray-900">Амнияти Пурра</h4>
+                    <p data-lang="about_f1_text" class="text-gray-500 text-sm mt-1">
+                        Ҳамаи соҳибони амвол ва эълонҳо санҷида мешаванд.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

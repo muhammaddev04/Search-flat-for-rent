@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100 mt-20">
+    <h2 data-lang="login_h2" class="text-3xl font-bold text-gray-900 text-center mb-6">Вуруд ба система</h2>
+    
+    {% if error %}
+        <div class="bg-red-50 text-red-600 p-3 rounded-xl text-sm mb-4 font-medium text-center border border-red-200">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label data-lang="login_user" class="block text-sm font-semibold text-gray-700 mb-1">Номи корбарӣ ё Email</label>
+            <input type="text" name="username" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div>
+            <label data-lang="login_pass" class="block text-sm font-semibold text-gray-700 mb-1">Парол</label>
+            <input type="password" name="password" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <button type="submit" data-lang="login_btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition">Вуруд</button>
+    </form>
+</div>
+
+<script>
+    Object.assign(translations.tg, { login_h2: "Вуруд ба система", login_user: "Номи корбарӣ ё Email", login_pass: "Парол", login_btn: "Вуруд" });
+    Object.assign(translations.ru, { login_h2: "Вход в систему", login_user: "Имя пользователя или Email", login_pass: "Пароль", login_btn: "Войти" });
+    Object.assign(translations.en, { login_h2: "Sign In", login_user: "Username or Email", login_pass: "Password", login_btn: "Login" });
+</script>
+
+{% endblock %}
