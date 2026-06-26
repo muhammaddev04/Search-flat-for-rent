@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- Илова кардани китобхонаи Lightbox (агар дар base.html набошад) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+
 <div class="max-w-4xl mx-auto py-8 px-4">
 
-    <!-- Суратҳо -->
+    <!-- Суратҳо бо қобилияти калон шудан -->
     <div class="flex overflow-x-auto space-x-4 pb-4 mb-8">
         {% for img in property.images.all %}
-            <div class="flex-none w-64 h-64 rounded-2xl overflow-hidden shadow-lg">
-                <img src="{{ img.image.url }}" alt="Property Image" class="w-full h-full object-cover">
-            </div>
+            <a href="{{ img.image.url }}" data-lightbox="property-gallery" class="flex-none w-64 h-64 rounded-2xl overflow-hidden shadow-lg border hover:border-indigo-400 transition">
+                <img src="{{ img.image.url }}" alt="Property Image" class="w-full h-full object-cover cursor-pointer">
+            </a>
         {% endfor %}
     </div>
 
@@ -18,7 +21,7 @@
     </div>
 
     <!-- Грид бо маълумот -->
-    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8 grid grid-cols-2 md:grid-cols-3 gap-6 text-center">
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         <div>
             <div class="text-gray-400 mb-1"><i class="fa-solid fa-bed text-xl text-indigo-500"></i></div>
             <div class="font-bold text-gray-900 text-lg">{{ property.rooms }}</div>
@@ -29,36 +32,35 @@
             <div class="font-bold text-gray-900 text-lg">{{ property.area }}</div>
             <p data-lang="area" class="text-xs text-gray-500">м²</p>
         </div>
-
         <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-ruler-combined text-xl text-indigo-500"></i></div>
+            <div class="text-gray-400 mb-1"><i class="fa-solid fa-stairs text-xl text-indigo-500"></i></div>
             <div class="font-bold text-gray-900 text-lg">{{ property.floor }}</div>
-            <p data-lang="area" class="text-xs text-gray-500"></p>
+            <p class="text-xs text-gray-500">ошёна</p>
         </div>
-
-
-
         <div>
             <div class="text-gray-400 mb-1"><i class="fa-solid fa-city text-xl text-indigo-500"></i></div>
             <div class="font-bold text-gray-900 text-lg">{{ property.city }}</div>
         </div>
         <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-map-location-dot text-xl text-indigo-500"></i></div>
+            <div class="text-gray-400 mb-1"><i class="fa-solid fa-city text-xl text-indigo-500"></i></div>
             <div class="font-bold text-gray-900 text-lg">{{ property.district }}</div>
         </div>
-        <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-circle-check text-xl text-indigo-500"></i></div>
+        <div class="text-gray-400 mb-1"><i class="fa-solid fa-circle-check text-xl text-indigo-500"></i></div>
+
             <div class="font-bold text-gray-900 text-lg">
+
                 {% if property.is_available %}
-                    <span class="text-green-600">Дастрас аст</span>
+
+                    <div class="text-green-600">Дастрас аст</div>
+
                 {% else %}
-                    <span class="text-red-600">Дастрас нест</span>
+
+                    <div class="text-red-600">Дастрас нест</div>
+
                 {% endif %}
+
             </div>
-        </div>
-        <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-calendar-days text-xl text-indigo-500"></i></div>
-            <div class="font-bold text-gray-900 text-lg">{{ property.created_at|date:"d.m.Y" }}</div>
+
         </div>
     </div>
 
@@ -68,18 +70,15 @@
         <p class="text-gray-600 leading-relaxed">{{ property.description }}</p>
     </div>
 
-    <!-- Қисмати тамос бо соҳибхона -->
+    <!-- Қисмати тамос -->
     <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
         <h3 class="text-lg font-bold text-indigo-900 mb-4" data-lang="contact_owner">Тамос бо соҳибхона</h3>
-        
         <div class="flex items-center gap-4">
             <div class="w-14 h-14 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xl uppercase shadow-md">
                 {{ property.owner.username|slice:":1"|upper }}
             </div>
-            
             <div>
                 <p class="font-semibold text-gray-900">{{ property.owner.username }}</p>
-                
                 {% if property.owner.phone_number %}
                     <a href="https://wa.me/{{ property.owner.phone_number }}" target="_blank" class="text-indigo-600 font-bold text-lg hover:underline flex items-center gap-2 mt-1">
                         <i class="fa-brands fa-whatsapp text-green-600 text-xl"></i> {{ property.owner.phone_number }}
@@ -94,9 +93,7 @@
     <!-- Тугмаҳои амал -->
     <div class="mt-8 flex gap-4">
         {% if user == property.owner %}
-            <a href="{% url 'update_property' property.pk %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-xl transition">
-                Таҳрир кардан
-            </a>
+            <a href="{% url 'update_property' property.pk %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-xl transition">Таҳрир кардан</a>
         {% else %}
             <form action="{% url 'toggle_favorite' property.pk %}" method="POST">
                 {% csrf_token %}
@@ -107,4 +104,7 @@
         {% endif %}
     </div>
 </div>
+
+<!-- Скрипти Lightbox барои калон кардани суратҳо -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 {% endblock %}
