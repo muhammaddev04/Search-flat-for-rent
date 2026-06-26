@@ -3,6 +3,48 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Property, Property_Image, Favorite
 from django.http import JsonResponse
+import os
+from django.http import JsonResponse
+from groq import Groq
+from dotenv import load_dotenv
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+
+load_dotenv()
+
+@csrf_exempt
+def ask_groq_view(request):
+    if request.method == 'POST':
+        api_key = os.getenv("GROQ_API_KEY")
+        
+        if not api_key:
+            return JsonResponse({'response': 'Хатогӣ: API Key танзим нашудааст.'}, status=500)
+
+        client = Groq(api_key=api_key)
+        
+        data = json.loads(request.body)
+        user_message = data.get('message')
+        
+        chat_completion = client.chat.completions.create(
+    messages=[
+        {
+            "role": "system", 
+            "content": (
+                "You are an intelligent assistant for the 'Comfort Home' real estate project. "
+                "Your primary goal is to help users only with information related to this project (properties, rentals, services). "
+                "1. If the user asks about anything unrelated to real estate or 'Comfort Home', politely decline and redirect them back to the project. "
+                "2. Detect the user's language automatically. You must respond in the same language the user is using (Tajik, Russian, or English). "
+                "3. Be professional, concise, and helpful."
+            )
+        },
+        {"role": "user", "content": user_message}
+    ],
+            model="openai/gpt-oss-120b",
+        )
+        return JsonResponse({'response': chat_completion.choices[0].message.content})
+
+
 
 
 @login_required

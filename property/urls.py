@@ -23,4 +23,6 @@ urlpatterns = [
     path('favorites/', views.favorite_list, name='favorite_list'),
     path('toggle-favorite/<int:pk>/', views.toggle_favorite, name='toggle_favorite'),
     path('delete-favorite/<int:pk>/', views.delete_favorite, name='delete_favorite'),
+
+    path('ask-groq/', views.ask_groq_view, name='ask_groq'),
 ]
