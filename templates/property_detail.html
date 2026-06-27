@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Илова кардани китобхонаи Lightbox (агар дар base.html набошад) -->
+<!-- Lightbox CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
 
 <div class="max-w-4xl mx-auto py-8 px-4">
 
-    <!-- Суратҳо бо қобилияти калон шудан -->
+    <!-- Суратҳо -->
     <div class="flex overflow-x-auto space-x-4 pb-4 mb-8">
         {% for img in property.images.all %}
             <a href="{{ img.image.url }}" data-lightbox="property-gallery" class="flex-none w-64 h-64 rounded-2xl overflow-hidden shadow-lg border hover:border-indigo-400 transition">
@@ -18,6 +18,12 @@
     <div class="mb-6">
         <h1 class="text-3xl font-bold text-gray-900">{{ property.title }}</h1>
         <p class="text-xl text-indigo-600 font-semibold mt-2">{{ property.price }} TJS</p>
+        
+        <!-- Шумораи умумии маҳбубҳо -->
+        <div class="mt-2 text-gray-600">
+            <i class="fa-solid fa-heart text-red-500"></i>
+            <span class="font-bold">{{ property.favorites.count }}</span> нафар инро писандидаанд
+        </div>
     </div>
 
     <!-- Грид бо маълумот -->
@@ -41,50 +47,72 @@
             <div class="text-gray-400 mb-1"><i class="fa-solid fa-city text-xl text-indigo-500"></i></div>
             <div class="font-bold text-gray-900 text-lg">{{ property.city }}</div>
         </div>
-
         <div>
             <div class="text-gray-400 mb-1"><i class="fa-solid fa-city text-xl text-indigo-500"></i></div>
             <div class="font-bold text-gray-900 text-lg">{{ property.district }}</div>
         </div>
-
         <div>
             <div class="text-gray-400 mb-1"><i class="fa-solid fa-circle-check text-xl text-indigo-500"></i></div>
-            <div class="font-bold text-gray-900 text-lg">{{ property.created_at }}</div>
+            <div class="font-bold text-gray-900 text-lg">{{ property.created_at|date:"d.m.Y" }}</div>
         </div>
-            <div class="font-bold text-gray-900 text-lg">
-
-                {% if property.is_available %}
-
-                    <div class="text-green-600">Дастрас аст</div>
-
-                {% else %}
-
-                    <div class="text-red-600">Дастрас нест</div>
-
-                {% endif %}
-
+        <div class="font-bold text-gray-900 text-lg">
+            {% if property.is_available %}
+                <div class="text-green-600">Дастрас аст</div>
+            {% else %}
+                <div class="text-red-600">Дастрас нест</div>
+            {% endif %}
         </div>
     </div>
 
+    <!-- Маълумоти иловагӣ -->
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-        <h2 class="text-lg font-bold mb-4" data-lang="address_details">address_details</h2>
+        <h2 class="text-lg font-bold mb-4" data-lang="address_details">Address details</h2>
         <p class="text-gray-600 leading-relaxed">{{ property.address_details }}</p>
     </div>
 
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-        <h2 class="text-lg font-bold mb-4" data-lang="amenities">Имкомнот</h2>
+        <h2 class="text-lg font-bold mb-4" data-lang="amenities">Имкониятҳо</h2>
         <p class="text-gray-600 leading-relaxed">{{ property.amenities }}</p>
     </div>
 
-    <!-- Тавсиф -->
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
         <h2 class="text-lg font-bold mb-4" data-lang="description">Тавсиф</h2>
         <p class="text-gray-600 leading-relaxed">{{ property.description }}</p>
     </div>
 
-    <!-- Қисмати тамос -->
-    <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
-        <h3 class="text-lg font-bold text-indigo-900 mb-4" data-lang="contact_owner">Тамос бо соҳибхона</h3>
+    <!-- ЧАТ БО СОҲИБХОНА (Амният: танҳо барои корбарони воридшуда) -->
+    {% if user.is_authenticated %}
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
+        <h2 class="text-lg font-bold mb-4">Суҳбат бо соҳибхона</h2>
+        <div class="h-64 overflow-y-auto mb-4 border p-4 rounded-xl bg-gray-50">
+            {% for msg in messages %}
+                <div class="mb-3 {% if msg.sender == user %}text-right{% endif %}">
+                    <span class="text-xs text-gray-500">{{ msg.sender.username }}</span>
+                    <p class="bg-indigo-100 p-2 rounded-lg inline-block text-sm {% if msg.sender == user %}bg-indigo-600 text-white{% endif %}">
+                        {{ msg.content }}
+                    </p>
+                </div>
+            {% empty %}
+                <p class="text-gray-400 text-sm italic">Ҳанӯз паёме нест.</p>
+            {% endfor %}
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="flex gap-2">
+                <input type="text" name="content" class="flex-1 border p-2 rounded-xl" placeholder="Паёми худро нависед..." required>
+                <button type="submit" name="send_message" class="bg-indigo-600 text-white px-4 py-2 rounded-xl">Фиристодан</button>
+            </div>
+        </form>
+    </div>
+    {% else %}
+        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 mb-8 text-center">
+            <p class="text-gray-600">Барои суҳбат бо соҳибхона лутфан <a href="{% url 'login' %}" class="text-indigo-600 font-bold underline">ворид шавед</a>.</p>
+        </div>
+    {% endif %}
+
+    <!-- Тамос бо соҳибхона -->
+    <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mb-8">
+        <h3 class="text-lg font-bold text-indigo-900 mb-4">Тамос бо соҳибхона</h3>
         <div class="flex items-center gap-4">
             <div class="w-14 h-14 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xl uppercase shadow-md">
                 {{ property.owner.username|slice:":1"|upper }}
@@ -95,8 +123,6 @@
                     <a href="https://wa.me/{{ property.owner.phone_number }}" target="_blank" class="text-indigo-600 font-bold text-lg hover:underline flex items-center gap-2 mt-1">
                         <i class="fa-brands fa-whatsapp text-green-600 text-xl"></i> {{ property.owner.phone_number }}
                     </a>
-                {% else %}
-                    <p class="text-gray-500 italic text-sm" data-lang="no_phone">Рақами телефон илова нашудааст</p>
                 {% endif %}
             </div>
         </div>
@@ -109,7 +135,7 @@
         {% else %}
             <form action="{% url 'toggle_favorite' property.pk %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" class="{% if is_favorited %}bg-red-500{% else %}bg-gray-800{% endif %} text-white px-6 py-2 rounded-xl transition">
+                <button type="submit" name="toggle_favorite" class="{% if is_favorited %}bg-red-500{% else %}bg-gray-800{% endif %} text-white px-6 py-2 rounded-xl transition">
                     {% if is_favorited %}Маҳбубҳо (Нест кардан){% else %}Илова ба маҳбубҳо{% endif %}
                 </button>
             </form>
@@ -117,6 +143,5 @@
     </div>
 </div>
 
-<!-- Скрипти Lightbox барои калон кардани суратҳо -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 {% endblock %}

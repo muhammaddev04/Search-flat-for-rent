@@ -9,6 +9,9 @@ from groq import Groq
 from dotenv import load_dotenv
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .models import Property, Favorite, Message
+
+
 
 
 load_dotenv()
@@ -116,17 +119,48 @@ def property_search(request):
     })
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
+from .models import Property, Favorite, Message
+
 def property_detail(request, pk):
     prop = get_object_or_404(Property, pk=pk)
     is_favorited = False
+    messages = []
+
+   
+    if request.method == 'POST' and request.user.is_authenticated:
+        
+        if 'send_message' in request.POST:
+            content = request.POST.get('content')
+            if content:
+                Message.objects.create(
+                    sender=request.user, 
+                    receiver=prop.owner, 
+                    property=prop, 
+                    content=content
+                )
+            return redirect('property_detail', pk=pk)
+        
+       
+        elif 'toggle_favorite' in request.POST:
+            
+            return redirect('property_detail', pk=pk)
+
+    
     if request.user.is_authenticated:
         is_favorited = Favorite.objects.filter(user=request.user, property=prop).exists()
+        
+        
+        messages = Message.objects.filter(property=prop).filter(
+            Q(sender=request.user) | Q(receiver=request.user)
+        ).order_by('timestamp')
+
     return render(request, 'property_detail.html', {
         'property': prop,
         'is_favorited': is_favorited,
+        'messages': messages,
     })
-
-
 @login_required
 def property_list(request):
 
