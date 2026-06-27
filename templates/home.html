@@ -13,12 +13,12 @@
             <form method="GET" action="{% url 'home' %}" class="bg-white p-4 rounded-2xl shadow-xl grid grid-cols-1 sm:grid-cols-2 gap-3 items-end text-left w-full max-w-2xl">
 
                 <div class="relative w-full">
-                    <label data-lang="label_location" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Шаҳр</label>
+                    <label data-lang="label_location" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Шаҳр-</label>
                     <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Шаҳр..." class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
                 </div>
 
                 <div class="relative w-full">
-                    <label data-lang="label_district" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Ноҳия</label>
+                    <label data-lang="label_district" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Ноҳия-</label>
                     <input type="text" name="qu" value="{{ request.GET.qu|default:'' }}" placeholder="Ноҳия..." class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
                 </div>
 
