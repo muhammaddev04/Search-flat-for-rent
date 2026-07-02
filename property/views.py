@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Property, Property_Image, Favorite
+from .forms import PropertyForm, PropertyImageForm
 from django.http import JsonResponse
+from django.db.models import Avg
 import os
 from django.http import JsonResponse
 from groq import Groq
@@ -16,36 +18,137 @@ from .models import Property, Favorite, Message
 
 load_dotenv()
 
-@csrf_exempt
-def ask_groq_view(request):
-    if request.method == 'POST':
-        api_key = os.getenv("GROQ_API_KEY")
-        
-        if not api_key:
-            return JsonResponse({'response': 'Хатогӣ: API Key танзим нашудааст.'}, status=500)
+api_key = os.getenv("GROQ_API_KEY")
 
-        client = Groq(api_key=api_key)
-        
+# Содда rate-limit барои AI ассистент: ҳар корбар на бештар аз 15 дархост дар як дақиқа.
+# Ин пеши сӯхтани GROQ_API_KEY-ро аз тарафи корбарони бераҳм мегирад.
+AI_RATE_LIMIT = 15
+AI_RATE_WINDOW = 60  # сония
+
+AI_REPLY_LANGUAGES = {
+    'tg': 'Tajik',
+    'ru': 'Russian',
+    'en': 'English',
+}
+
+# Калидвожаҳое, ки паёми корбарро ба филтрҳои воқеии Property мепайванданд —
+# ин ба AI имкон медиҳад "дастрасии контекстӣ" ба маълумоти БОЗ ба ҷои
+# додаҳои статикии frontend дошта бошад.
+_CITY_KEYWORDS = ['dushanbe', 'душанбе', 'khujand', 'хуҷанд', 'худжанд', 'kulob', 'кӯлоб', 'куляб', 'bokhtar', 'бохтар']
+_TYPE_KEYWORDS = {
+    'apartment': ['apartment', 'квартира', 'квартираи', 'flat'],
+    'house': ['house', 'ҳавлӣ', 'хонаи', 'дом', 'ҳавлигӣ'],
+    'room': ['room', 'ҳуҷра', 'комната'],
+}
+
+
+def _find_relevant_properties(user_message):
+    """
+    Ҷустуҷӯи сабуки калидвожа дар паёми корбар, то ба AI то 5 эълони ВОҚЕӢ
+    аз БОЗ дода шавад — ба ҷои он ки AI маълумотро аз худ тахмин занад.
+    """
+    text = user_message.lower()
+    qs = Property.objects.filter(is_available=True)
+
+    for city in _CITY_KEYWORDS:
+        if city in text:
+            qs = qs.filter(city__icontains=city.split()[0][:4])
+            break
+
+    for ptype, keywords in _TYPE_KEYWORDS.items():
+        if any(kw in text for kw in keywords):
+            qs = qs.filter(property_type=ptype)
+            break
+
+    return qs.order_by('-created_at')[:5]
+
+
+def _format_properties_context(properties):
+    if not properties:
+        return "No matching properties were found in the database for this query."
+    lines = []
+    for p in properties:
+        lines.append(
+            f"- [ID {p.id}] {p.title} | {p.get_property_type_display()} | {p.price} TJS | "
+            f"{p.rooms} rooms, {p.area} m² | {p.city or '—'}, {p.district} | "
+            f"{'available' if p.is_available else 'not available'} | /property/{p.id}/"
+        )
+    return "\n".join(lines)
+
+
+@login_required
+def ask_groq_view(request):
+    if request.method != 'POST':
+        return JsonResponse({'response': 'Метод пуштибонӣ намешавад.'}, status=405)
+
+    # --- rate limiting (ба ҳисоби корбари воридшуда) ---
+    from django.core.cache import cache
+    cache_key = f'ai_rate_{request.user.pk}'
+    request_count = cache.get(cache_key, 0)
+    if request_count >= AI_RATE_LIMIT:
+        return JsonResponse(
+            {'response': 'Шумо занҷираи дархостҳоро зиёд кардед. Лутфан баъд аз як дақиқа кӯшиш кунед.'},
+            status=429,
+        )
+    cache.set(cache_key, request_count + 1, timeout=AI_RATE_WINDOW)
+
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        return JsonResponse({'response': 'Хатогӣ: API Key танзим нашудааст.'}, status=500)
+
+    try:
         data = json.loads(request.body)
-        user_message = data.get('message')
-        
+    except (json.JSONDecodeError, TypeError):
+        return JsonResponse({'response': 'Дархости нодуруст.'}, status=400)
+
+    user_message = (data.get('message') or '').strip()
+    if not user_message:
+        return JsonResponse({'response': 'Лутфан паём нависед.'}, status=400)
+    if len(user_message) > 2000:
+        return JsonResponse({'response': 'Паём хеле дароз аст (макс. 2000 аломат).'}, status=400)
+
+    reply_lang = AI_REPLY_LANGUAGES.get((data.get('lang') or '').lower(), 'Tajik')
+
+    # Дастрасии контекстӣ ба БОЗ — ҷустуҷӯи воқеӣ дар асоси паёми корбар,
+    # на такя ба маълумоти статикии frontend.
+    relevant_properties = _find_relevant_properties(user_message)
+    properties_context = _format_properties_context(relevant_properties)
+
+    client = Groq(api_key=api_key)
+
+    try:
         chat_completion = client.chat.completions.create(
-    messages=[
-        {
-            "role": "system", 
-            "content": (
-                "You are an intelligent assistant for the 'Comfort Home' real estate project. "
-                "Your primary goal is to help users only with information related to this project (properties, rentals, services). "
-                "1. If the user asks about anything unrelated to real estate or 'Comfort Home', politely decline and redirect them back to the project. "
-                "2. Detect the user's language automatically. You must respond in the same language the user is using (Tajik, Russian, or English). "
-                "3. Be professional, concise, and helpful."
-            )
-        },
-        {"role": "user", "content": user_message}
-    ],
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are the AI assistant for a real estate platform called Comfort Home."
+                        "You assist users ONLY within the real estate system: properties (listings), "
+                        "property details, search & filters, users, favorites, images, landlord actions "
+                        "(if allowed). You must NOT talk about unrelated topics. Always use real database "
+                        "data — you are given a REAL_PROPERTIES context block below with actual current "
+                        "listings relevant to the user's message; base your answer on that data and never "
+                        "invent or assume missing information. If REAL_PROPERTIES says no matches were "
+                        "found, tell the user nothing matched — do not make up a listing. If multiple "
+                        f"results exist, summarize briefly (max 5 items). Reply ONLY in {reply_lang}, "
+                        "regardless of what language the user wrote in — this is a strict UI-language "
+                        "requirement set by the platform, not a translation request. Never mix languages "
+                        "in one response. Short, clear, and useful. No long explanations. No storytelling. "
+                        "Focus on actions and data. If user asks outside real estate, politely refuse and "
+                        "return to platform topic. Do not give personal opinions. Be precise and "
+                        "professional. When mentioning a property include: Title, Price, Location, and a "
+                        "short 1-2 line description. You are not a general AI — you are a domain-specific "
+                        "real estate assistant for Comfort Home.\n\n"
+                        f"REAL_PROPERTIES (current matches from the database for this query):\n{properties_context}"
+                    )
+                },
+                {"role": "user", "content": user_message}
+            ],
             model="openai/gpt-oss-120b",
         )
         return JsonResponse({'response': chat_completion.choices[0].message.content})
+    except Exception:
+        return JsonResponse({'response': 'Хатогӣ ҳангоми пайвастшавӣ ба AI. Лутфан баъдтар кӯшиш кунед.'}, status=502)
 
 
 
@@ -128,39 +231,87 @@ def property_detail(request, pk):
     is_favorited = False
     messages = []
 
-   
+
     if request.method == 'POST' and request.user.is_authenticated:
-        
+
         if 'send_message' in request.POST:
-            content = request.POST.get('content')
+            content = (request.POST.get('content') or '').strip()
             if content:
                 Message.objects.create(
-                    sender=request.user, 
-                    receiver=prop.owner, 
-                    property=prop, 
+                    sender=request.user,
+                    receiver=prop.owner,
+                    property=prop,
                     content=content
                 )
             return redirect('property_detail', pk=pk)
-        
-       
-        elif 'toggle_favorite' in request.POST:
-            
-            return redirect('property_detail', pk=pk)
 
-    
+        # Эзоҳ: toggle кардани "дилхоҳ" аллакай дар view-и алоҳида
+        # `toggle_favorite` (бо URL-и худаш) иҷро мешавад — ин ҷо такрор буд
+        # ва ҳеҷ коре намекард (dead code), бинобар ин бартараф карда шуд.
+
+
     if request.user.is_authenticated:
         is_favorited = Favorite.objects.filter(user=request.user, property=prop).exists()
-        
-        
+
+
         messages = Message.objects.filter(property=prop).filter(
             Q(sender=request.user) | Q(receiver=request.user)
         ).order_by('timestamp')
+
+    # --- Баҳодиҳии воқеии бозор (Real Market Valuation) ---
+    # Миёнаи нарх аз рӯи амволҳои ҳамон шаҳр ва ҳамон навъ (ба ғайр аз худи ин эълон)
+    # ҳисоб карда мешавад. Агар маълумоти кофӣ набошад (< 2 эълони монанд),
+    # баҳодиҳӣ нишон дода намешавад — на рақами тахминӣ.
+    comparables = Property.objects.filter(
+        city=prop.city,
+        property_type=prop.property_type,
+    ).exclude(pk=prop.pk)
+    market_stats = comparables.aggregate(avg_price=Avg('price'))
+    market_avg = market_stats['avg_price']
+    market_count = comparables.count()
+    market_diff_pct = None
+    if market_avg:
+        market_avg = round(market_avg, 2)
+        market_diff_pct = round(((prop.price - market_avg) / market_avg) * 100)
 
     return render(request, 'property_detail.html', {
         'property': prop,
         'is_favorited': is_favorited,
         'messages': messages,
+        'market_avg': market_avg,
+        'market_count': market_count,
+        'market_diff_pct': market_diff_pct,
     })
+
+
+def properties_map_data(request):
+    """
+    API-и сабук барои харитаи Leaflet: рӯйхати амволҳои дастрас бо координата
+    (JSON). Танҳо GET, кушода барои ҳама (анонимӣ низ), барои он ки харита
+    дар саҳифаи асосӣ кор кунад новобаста аз ҳолати вуруд.
+    """
+    propertys = Property.objects.filter(
+        is_available=True,
+        latitude__isnull=False,
+        longitude__isnull=False,
+    ).select_related('owner')[:200]
+
+    data = [
+        {
+            'id': p.id,
+            'title': p.title,
+            'price': str(p.price),
+            'city': p.city or '',
+            'district': p.district or '',
+            'lat': float(p.latitude),
+            'lng': float(p.longitude),
+            'type': p.get_property_type_display(),
+            'url': f'/property/{p.id}/',
+            'image': p.images.first().image.url if p.images.first() else None,
+        }
+        for p in propertys
+    ]
+    return JsonResponse({'properties': data})
 @login_required
 def property_list(request):
 
@@ -188,50 +339,15 @@ def create_property(request):
         return redirect('home')
 
     if request.method == 'POST':
-        title = request.POST.get('title')
-        description = request.POST.get('description', '')  
-        property_type = request.POST.get('property_type')
-        price = request.POST.get('price')
-        rooms = request.POST.get('rooms')
-        area = request.POST.get('area')
-        floor = request.POST.get('floor')
-        city = request.POST.get('city')
-        district = request.POST.get('district')
-        address_details = request.POST.get('address_details')
-        amenities = request.POST.get('amenities')
-        is_available = request.POST.get('is_available') == 'on'
-
-        
-        if not all([title, property_type, price, rooms, area, city, district, address_details]):
-            return render(request, 'property_form.html', {
-                'error': 'Лутфан ҳамаи майдонҳои асосиро пур кунед!'
-            })
-
-        try:
-           
-            Property.objects.create(
-                title=title,
-                description=description,
-                property_type=property_type,
-                price=float(price) if price else 0,  
-                rooms=int(rooms) if rooms else 1,    
-                area=float(area) if area else 0,      
-                floor=int(floor) if floor else 0,      
-                city=city,
-                district=district,
-                address_details=address_details,
-                amenities=amenities,
-                is_available=is_available,
-                owner=request.user,
-            )
+        form = PropertyForm(request.POST)
+        if form.is_valid():
+            prop = form.save(commit=False)
+            prop.owner = request.user
+            prop.save()
             return redirect('property_list')
-            
-        except Exception as e:
-            return render(request, 'property_form.html', {
-                'error': f'Хатогӣ ҳангоми захира дар база: {e}'
-            })
+        return render(request, 'property_form.html', {'form': form})
 
-    return render(request, 'property_form.html')
+    return render(request, 'property_form.html', {'form': PropertyForm()})
 
 
 @login_required
@@ -239,22 +355,13 @@ def update_property(request, pk):
     prop = get_object_or_404(Property, pk=pk, owner=request.user)
 
     if request.method == 'POST':
-        prop.title = request.POST.get('title')
-        prop.description = request.POST.get('description')
-        prop.property_type = request.POST.get('property_type')
-        prop.price = request.POST.get('price')
-        prop.rooms = request.POST.get('rooms')
-        prop.area = request.POST.get('area')
-        prop.floor = request.POST.get('floor')
-        prop.city = request.POST.get('city')
-        prop.district = request.POST.get('district')
-        prop.address_details = request.POST.get('address_details')
-        prop.amenities = request.POST.get('amenities')
-        prop.is_available = request.POST.get('is_available') == 'on'
+        form = PropertyForm(request.POST, instance=prop)
+        if form.is_valid():
+            form.save()
+            return redirect('property_list')
+        return render(request, 'property_form.html', {'form': form, 'property': prop})
 
-        prop.save()
-        return redirect('property_list')
-    return render(request, 'property_form.html', {'property': prop})
+    return render(request, 'property_form.html', {'form': PropertyForm(instance=prop), 'property': prop})
 
 
 @login_required
@@ -289,31 +396,23 @@ def propertyimage_list(request):
 def create_propertyimage(request):
     if not request.user.is_authenticated or request.user.role not in ('landlord', 'admin'):
         return redirect('home')
-        # return HttpResponse('Танҳо соҳибхона метавонад сурат илова кунад', status=403)
-        
-
 
     if request.method == 'POST':
-        property_id = request.POST.get('property')
-        image = request.FILES.get('image')
-
-        if not property_id or not image:
-            return render(request, 'propertyimage_form.html', {
-                'error': 'Лутфан хона ва аксро интихоб кунед',
-                'propertys': Property.objects.filter(owner=request.user),
-            })
-
-        # Мутмаин шавем хона тааллуқ дорад ба ҳамин корбар
-        prop = get_object_or_404(Property, pk=property_id, owner=request.user)
-
-        Property_Image.objects.create(
-            property=prop,
-            image=image,
-        )
-
-        return redirect('propertyimages_list')
+        form = PropertyImageForm(request.POST, request.FILES, owner=request.user)
+        if form.is_valid():
+            # Мутмаин мешавем, ки хонаи интихобшуда воқеан ба ҳамин корбар тааллуқ дорад
+            prop = get_object_or_404(Property, pk=form.cleaned_data['property'].pk, owner=request.user)
+            image = form.save(commit=False)
+            image.property = prop
+            image.save()
+            return redirect('propertyimages_list')
+        return render(request, 'propertyimage_form.html', {
+            'form': form,
+            'propertys': Property.objects.filter(owner=request.user),
+        })
 
     return render(request, 'propertyimage_form.html', {
+        'form': PropertyImageForm(owner=request.user),
         'propertys': Property.objects.filter(owner=request.user),
     })
 
@@ -323,19 +422,19 @@ def update_propertyimage(request, pk):
     propertyimage = get_object_or_404(Property_Image, pk=pk, property__owner=request.user)
 
     if request.method == 'POST':
-        property_id = request.POST.get('property')
-        if property_id:
-            prop = get_object_or_404(Property, pk=property_id, owner=request.user)
-            propertyimage.property = prop
+        form = PropertyImageForm(request.POST, request.FILES, instance=propertyimage, owner=request.user)
+        if form.is_valid():
+            prop = get_object_or_404(Property, pk=form.cleaned_data['property'].pk, owner=request.user)
+            image = form.save(commit=False)
+            image.property = prop
+            image.save()
+            return redirect('propertyimages_list')
+        return render(request, 'update_propertyimages.html', {'form': form, 'propertyimage': propertyimage})
 
-        new_image = request.FILES.get('image')
-        if new_image:
-            propertyimage.image = new_image
-
-        propertyimage.save()
-        return redirect('propertyimages_list')
-
-    return render(request, 'update_propertyimages.html', {'propertyimage': propertyimage})
+    return render(request, 'update_propertyimages.html', {
+        'form': PropertyImageForm(instance=propertyimage, owner=request.user),
+        'propertyimage': propertyimage,
+    })
 
 
 @login_required
@@ -398,3 +497,8 @@ def delete_favorite(request, pk):
         favorite.delete()
         return redirect('favorite_list')
     return render(request, 'delete_favorites.html', {'favorite': favorite})
+
+
+@login_required
+def landlord_dashboard(request):
+    return render(request, 'dashboard/landlord_dashboard.html')

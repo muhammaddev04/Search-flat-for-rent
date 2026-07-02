@@ -22,6 +22,7 @@ class User(AbstractUser):
 class EmailConfirm(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='email_confirm')
     code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now=True)  # НАВ: то донем рамз кай сохта шуд (барои "аз нав фиристодан")
 
     def __str__(self):
         return self.user.username

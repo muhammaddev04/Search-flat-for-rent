@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -9,86 +10,99 @@
     <!-- Суратҳо -->
     <div class="flex overflow-x-auto space-x-4 pb-4 mb-8">
         {% for img in property.images.all %}
-            <a href="{{ img.image.url }}" data-lightbox="property-gallery" class="flex-none w-64 h-64 rounded-2xl overflow-hidden shadow-lg border hover:border-indigo-400 transition">
-                <img src="{{ img.image.url }}" alt="Property Image" class="w-full h-full object-cover cursor-pointer">
+            <a href="{{ img.image.url }}" data-lightbox="property-gallery" aria-label="Васеъ кардани сурат — {{ property.title }}" class="flex-none w-64 h-64 rounded-3xl overflow-hidden shadow-lg border border-gray-100 dark:border-white/10 hover:border-coral transition">
+                <img src="{{ img.image.url }}" alt="{{ property.title }}" class="w-full h-full object-cover cursor-pointer">
             </a>
         {% endfor %}
     </div>
 
     <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">{{ property.title }}</h1>
-        <p class="text-xl text-indigo-600 font-semibold mt-2">{{ property.price }} TJS</p>
-        
-        <!-- Шумораи умумии маҳбубҳо -->
-        <div class="mt-2 text-gray-600">
-            <i class="fa-solid fa-heart text-red-500"></i>
-            <span class="font-bold">{{ property.favorites.count }}</span> нафар инро писандидаанд
+        <div class="flex items-center gap-3 flex-wrap">
+            <h1 class="font-display text-3xl font-extrabold text-ink dark:text-white">{{ property.title }}</h1>
+            {% if property.images.first and property.owner.phone_number and property.amenities and property.address_details %}
+            <span class="inline-flex items-center gap-1.5 bg-emerald/10 text-emerald dark:text-gold dark:bg-gold/10 text-xs font-bold uppercase px-3 py-1.5 rounded-full">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i> <span data-lang="verified_label">Тасдиқшуда</span>
+            </span>
+            {% endif %}
+        </div>
+        <p class="text-xl gradient-text font-display font-extrabold mt-2">{{ property.price }} TJS</p>
+
+        <div class="mt-3 flex items-center gap-4 flex-wrap">
+            <!-- Шумораи умумии маҳбубҳо -->
+            <div class="text-gray-600 dark:text-gray-400">
+                <i class="fa-solid fa-heart text-red-500"></i>
+                <span class="font-bold">{{ property.favorites.count }}</span> нафар инро писандидаанд
+            </div>
+            <label class="flex items-center gap-1.5 text-sm font-medium text-ink/70 dark:text-gray-300 cursor-pointer">
+                <input type="checkbox" class="compare-checkbox" data-property-id="{{ property.id }}">
+                <span data-lang="compare_add">Муқоиса</span>
+            </label>
         </div>
     </div>
 
     <!-- Грид бо маълумот -->
-    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div class="bg-white dark:bg-white/5 p-6 rounded-3xl border border-gray-100 dark:border-white/10 shadow-sm mb-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-bed text-xl text-indigo-500"></i></div>
-            <div class="font-bold text-gray-900 text-lg">{{ property.rooms }}</div>
-            <p data-lang="rooms" class="text-xs text-gray-500">ҳуҷра</p>
+            <div class="mb-1"><i class="fa-solid fa-bed text-xl text-coral"></i></div>
+            <div class="font-bold text-ink dark:text-white text-lg">{{ property.rooms }}</div>
+            <p data-lang="rooms" class="text-xs text-gray-500 dark:text-gray-400">ҳуҷра</p>
         </div>
         <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-ruler-combined text-xl text-indigo-500"></i></div>
-            <div class="font-bold text-gray-900 text-lg">{{ property.area }}</div>
-            <p data-lang="area" class="text-xs text-gray-500">м²</p>
+            <div class="mb-1"><i class="fa-solid fa-ruler-combined text-xl text-coral"></i></div>
+            <div class="font-bold text-ink dark:text-white text-lg">{{ property.area }}</div>
+            <p data-lang="area" class="text-xs text-gray-500 dark:text-gray-400">м²</p>
         </div>
         <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-stairs text-xl text-indigo-500"></i></div>
-            <div class="font-bold text-gray-900 text-lg">{{ property.floor }}</div>
-            <p class="text-xs text-gray-500">ошёна</p>
+            <div class="mb-1"><i class="fa-solid fa-stairs text-xl text-coral"></i></div>
+            <div class="font-bold text-ink dark:text-white text-lg">{{ property.floor }}</div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">ошёна</p>
         </div>
         <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-city text-xl text-indigo-500"></i></div>
-            <div class="font-bold text-gray-900 text-lg">{{ property.city }}</div>
+            <div class="mb-1"><i class="fa-solid fa-city text-xl text-coral"></i></div>
+            <div class="font-bold text-ink dark:text-white text-lg">{{ property.city }}</div>
         </div>
         <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-city text-xl text-indigo-500"></i></div>
-            <div class="font-bold text-gray-900 text-lg">{{ property.district }}</div>
+            <div class="mb-1"><i class="fa-solid fa-city text-xl text-coral"></i></div>
+            <div class="font-bold text-ink dark:text-white text-lg">{{ property.district }}</div>
         </div>
         <div>
-            <div class="text-gray-400 mb-1"><i class="fa-solid fa-circle-check text-xl text-indigo-500"></i></div>
-            <div class="font-bold text-gray-900 text-lg">{{ property.created_at|date:"d.m.Y" }}</div>
+            <div class="mb-1"><i class="fa-solid fa-circle-check text-xl text-coral"></i></div>
+            <div class="font-bold text-ink dark:text-white text-lg">{{ property.created_at|date:"d.m.Y" }}</div>
         </div>
-        <div class="font-bold text-gray-900 text-lg">
+        <div class="font-bold text-lg">
             {% if property.is_available %}
-                <div class="text-green-600">Дастрас аст</div>
+                <div class="text-pamir">Дастрас аст</div>
             {% else %}
-                <div class="text-red-600">Дастрас нест</div>
+                <div class="text-red-500">Дастрас нест</div>
             {% endif %}
         </div>
     </div>
 
     <!-- Маълумоти иловагӣ -->
-    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-        <h2 class="text-lg font-bold mb-4" data-lang="address_details">Address details</h2>
-        <p class="text-gray-600 leading-relaxed">{{ property.address_details }}</p>
+    <div class="bg-white dark:bg-white/5 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-white/10 mb-8">
+        <h2 class="font-display text-lg font-bold mb-4 text-ink dark:text-white" data-lang="address_details">Address details</h2>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ property.address_details }}</p>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-        <h2 class="text-lg font-bold mb-4" data-lang="amenities">Имкониятҳо</h2>
-        <p class="text-gray-600 leading-relaxed">{{ property.amenities }}</p>
+    <div class="bg-white dark:bg-white/5 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-white/10 mb-8">
+        <h2 class="font-display text-lg font-bold mb-4 text-ink dark:text-white" data-lang="amenities">Имкониятҳо</h2>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ property.amenities }}</p>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-        <h2 class="text-lg font-bold mb-4" data-lang="description">Тавсиф</h2>
-        <p class="text-gray-600 leading-relaxed">{{ property.description }}</p>
+    <div class="bg-white dark:bg-white/5 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-white/10 mb-8">
+        <h2 class="font-display text-lg font-bold mb-4 text-ink dark:text-white" data-lang="description">Тавсиф</h2>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ property.description }}</p>
     </div>
 
     <!-- ЧАТ БО СОҲИБХОНА (Амният: танҳо барои корбарони воридшуда) -->
     {% if user.is_authenticated %}
-    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-        <h2 class="text-lg font-bold mb-4">Суҳбат бо соҳибхона</h2>
-        <div class="h-64 overflow-y-auto mb-4 border p-4 rounded-xl bg-gray-50">
+    <div class="bg-white dark:bg-white/5 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-white/10 mb-8">
+        <h2 class="font-display text-lg font-bold mb-4 text-ink dark:text-white">Суҳбат бо соҳибхона</h2>
+        <div class="h-64 overflow-y-auto mb-4 border border-gray-100 dark:border-white/10 p-4 rounded-2xl bg-surface dark:bg-black/20">
             {% for msg in messages %}
                 <div class="mb-3 {% if msg.sender == user %}text-right{% endif %}">
-                    <span class="text-xs text-gray-500">{{ msg.sender.username }}</span>
-                    <p class="bg-indigo-100 p-2 rounded-lg inline-block text-sm {% if msg.sender == user %}bg-indigo-600 text-white{% endif %}">
+                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ msg.sender.username }}</span>
+                    <p class="bg-coral/10 text-ink dark:text-white p-2 rounded-lg inline-block text-sm {% if msg.sender == user %}gradient-btn text-white{% endif %}">
                         {{ msg.content }}
                     </p>
                 </div>
@@ -99,28 +113,28 @@
         <form method="POST">
             {% csrf_token %}
             <div class="flex gap-2">
-                <input type="text" name="content" class="flex-1 border p-2 rounded-xl" placeholder="Паёми худро нависед..." required>
-                <button type="submit" name="send_message" class="bg-indigo-600 text-white px-4 py-2 rounded-xl">Фиристодан</button>
+                <input type="text" name="content" class="flex-1 border border-gray-200 dark:border-white/10 dark:bg-white/5 dark:text-white p-2 rounded-xl focus:ring-2 focus:ring-coral focus:outline-none" placeholder="Паёми худро нависед..." required>
+                <button type="submit" name="send_message" class="gradient-btn text-white px-4 py-2 rounded-xl font-display font-bold">Фиристодан</button>
             </div>
         </form>
     </div>
     {% else %}
-        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 mb-8 text-center">
-            <p class="text-gray-600">Барои суҳбат бо соҳибхона лутфан <a href="{% url 'login' %}" class="text-indigo-600 font-bold underline">ворид шавед</a>.</p>
+        <div class="bg-surface dark:bg-white/5 p-6 rounded-3xl border border-gray-200 dark:border-white/10 mb-8 text-center">
+            <p class="text-gray-600 dark:text-gray-400">Барои суҳбат бо соҳибхона лутфан <a href="{% url 'login' %}" class="text-coral font-bold underline">ворид шавед</a>.</p>
         </div>
     {% endif %}
 
     <!-- Тамос бо соҳибхона -->
-    <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mb-8">
-        <h3 class="text-lg font-bold text-indigo-900 mb-4">Тамос бо соҳибхона</h3>
+    <div class="p-6 rounded-3xl border border-coral/20 mb-8" style="background-image: linear-gradient(135deg, rgba(255,107,74,0.08), rgba(255,193,69,0.08));">
+        <h3 class="font-display text-lg font-bold text-ink dark:text-white mb-4">Тамос бо соҳибхона</h3>
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xl uppercase shadow-md">
+            <div class="w-14 h-14 gradient-btn text-white rounded-full flex items-center justify-center font-display font-bold text-xl uppercase">
                 {{ property.owner.username|slice:":1"|upper }}
             </div>
             <div>
-                <p class="font-semibold text-gray-900">{{ property.owner.username }}</p>
+                <p class="font-semibold text-ink dark:text-white">{{ property.owner.username }}</p>
                 {% if property.owner.phone_number %}
-                    <a href="https://wa.me/{{ property.owner.phone_number }}" target="_blank" class="text-indigo-600 font-bold text-lg hover:underline flex items-center gap-2 mt-1">
+                    <a href="https://wa.me/{{ property.owner.phone_number }}" target="_blank" class="text-coral font-bold text-lg hover:underline flex items-center gap-2 mt-1">
                         <i class="fa-brands fa-whatsapp text-green-600 text-xl"></i> {{ property.owner.phone_number }}
                     </a>
                 {% endif %}
@@ -128,20 +142,90 @@
         </div>
     </div>
 
+    <!-- Баҳодиҳии воқеии нарх (танҳо барои соҳиби эълон) — аз рӯи миёнаи БОЗ ҳисоб мешавад -->
+    {% if user == property.owner %}
+    <div class="bg-white dark:bg-white/5 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-white/10 mb-8">
+        <div class="flex items-center gap-2 mb-4">
+            <i class="fa-solid fa-chart-line text-gold" aria-hidden="true"></i>
+            <h2 class="font-display text-lg font-bold text-ink dark:text-white" data-lang="valuation_title">Баҳодиҳии нарх</h2>
+        </div>
+        {% if market_avg %}
+            {% with bar_pct=market_diff_pct|add:50 %}
+            <div class="flex items-end justify-between mb-3">
+                <div>
+                    <p class="text-xs text-stone uppercase font-bold mb-1" data-lang="valuation_yours">Нархи шумо</p>
+                    <p class="font-display text-2xl font-bold text-ink dark:text-white">{{ property.price }} <span class="text-sm font-sans font-normal text-stone">TJS</span></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-stone uppercase font-bold mb-1" data-lang="valuation_market">Миёнаи бозор</p>
+                    <p class="font-display text-2xl font-bold text-stone">{{ market_avg }} <span class="text-sm font-sans font-normal">TJS</span></p>
+                </div>
+            </div>
+            <div class="h-2 rounded-full bg-cream dark:bg-white/10 relative overflow-hidden mb-3">
+                <div class="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald to-gold rounded-full" style="width:{% if bar_pct < 6 %}6{% elif bar_pct > 94 %}94{% else %}{{ bar_pct }}{% endif %}%"></div>
+            </div>
+            <p class="text-sm font-semibold">
+                {{ market_diff_pct|cut:"-" }}%
+                {% if market_diff_pct > 3 %}<span class="text-gold" data-lang="valuation_above">аз миёнаи бозор баландтар</span>
+                {% elif market_diff_pct < -3 %}<span class="text-emerald dark:text-gold" data-lang="valuation_below">аз миёнаи бозор пасттар</span>
+                {% else %}<span class="text-stone" data-lang="valuation_average">тақрибан дар сатҳи бозор</span>{% endif %}
+            </p>
+            <p class="text-xs text-stone dark:text-gray-500 mt-2"><span data-lang="valuation_sample_size" data-lang-count="{{ market_count }}">дар асоси {{ market_count }} эълони монанд</span></p>
+            {% endwith %}
+        {% else %}
+            <p class="text-sm text-stone dark:text-gray-400 py-4" data-lang="valuation_no_data">Барои баҳодиҳӣ дар ин шаҳр/навъ ҳанӯз эълони кофии монанд нест.</p>
+        {% endif %}
+        <p class="text-[11px] text-stone dark:text-gray-500 mt-4 italic" data-lang="valuation_disclaimer">* Ин баҳодиҳӣ дар асоси эълонҳои воқеии дигар дар ҳамин шаҳр ва навъ ҳисоб карда шудааст.</p>
+    </div>
+    {% endif %}
+
     <!-- Тугмаҳои амал -->
     <div class="mt-8 flex gap-4">
         {% if user == property.owner %}
-            <a href="{% url 'update_property' property.pk %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-xl transition">Таҳрир кардан</a>
-        {% else %}
+            <a href="{% url 'update_property' property.pk %}" data-lang="edit_btn" class="bg-saffron hover:brightness-95 text-ink font-display font-bold px-6 py-2.5 rounded-xl transition">Таҳрир кардан</a>
+        {% elif user.is_authenticated %}
             <form action="{% url 'toggle_favorite' property.pk %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" name="toggle_favorite" class="{% if is_favorited %}bg-red-500{% else %}bg-gray-800{% endif %} text-white px-6 py-2 rounded-xl transition">
+                <button type="submit" name="toggle_favorite"
+                    aria-label="{% if is_favorited %}Аз маҳбубҳо нест кардан{% else %}Илова ба маҳбубҳо{% endif %}"
+                    data-lang="{% if is_favorited %}fav_toggle_remove{% else %}fav_toggle_add{% endif %}"
+                    class="{% if is_favorited %}bg-red-500 hover:bg-red-600{% else %}gradient-btn{% endif %} text-white font-display font-bold px-6 py-2.5 rounded-xl transition active:scale-95">
                     {% if is_favorited %}Маҳбубҳо (Нест кардан){% else %}Илова ба маҳбубҳо{% endif %}
                 </button>
             </form>
+        {% else %}
+            <a href="{% url 'login' %}?next={% url 'property_detail' property.pk %}"
+                class="flex items-center gap-2 text-stone dark:text-gray-400 hover:text-emerald dark:hover:text-gold font-medium text-sm px-6 py-2.5 rounded-xl border border-dashed border-ink/15 dark:border-white/15 transition">
+                <i class="fa-regular fa-heart" aria-hidden="true"></i> <span data-lang="login_to_save">Барои маҳфуз кардан ворид шавед</span>
+            </a>
         {% endif %}
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<script type="application/json" id="detail-compare-data">
+{
+    "id": {{ property.id }},
+    "title": "{{ property.title|escapejs }}",
+    "price": {{ property.price|default:0 }},
+    "rooms": {{ property.rooms|default:0 }},
+    "area": {{ property.area|default:0 }},
+    "floor": {% if property.floor != None %}{{ property.floor }}{% else %}null{% endif %},
+    "city": "{{ property.city|default:""|escapejs }}",
+    "district": "{{ property.district|default:""|escapejs }}",
+    "type": "{{ property.get_property_type_display|escapejs }}",
+    "available": {{ property.is_available|yesno:"true,false" }},
+    "verified": {% if property.images.first and property.owner.phone_number and property.amenities and property.address_details %}true{% else %}false{% endif %},
+    "image": "{% if property.images.first %}{{ property.images.first.image.url|escapejs }}{% endif %}",
+    "url": "{% url 'property_detail' property.pk %}"
+}
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.registerCompareData) {
+            window.registerCompareData([JSON.parse(document.getElementById('detail-compare-data').textContent)]);
+        }
+    });
+</script>
 {% endblock %}

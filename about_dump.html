@@ -1,10 +1,11 @@
 
+
 <!DOCTYPE html>
 <html lang="tg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Comfort Home{% endblock %}</title>
+    <title>Comfort Home</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&subset=cyrillic&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -168,35 +169,28 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
             <div class="flex items-center">
-                <a href="{% url 'home' %}" class="text-xl sm:text-2xl font-display font-bold text-ink dark:text-white tracking-tight">
+                <a href="/" class="text-xl sm:text-2xl font-display font-bold text-ink dark:text-white tracking-tight">
                     Comfort <span class="text-emerald dark:text-gold">Home</span>
                 </a>
             </div>
 
             <div class="flex items-center gap-1 sm:gap-2">
                 <div class="hidden lg:flex items-center gap-1">
-                    <a href="{% url 'home' %}" data-lang="nav_home" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Асосӣ</a>
-                    <a href="{% url 'about' %}" data-lang="nav_about" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Дар бораи мо</a>
-                    
+                    <a href="/" data-lang="nav_home" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Асосӣ</a>
+                    <a href="/about/" data-lang="nav_about" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Дар бораи мо</a>
+                    <a href="/my-properties/" data-lang="nav_properties" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Амволҳо</a>
 
-                    <div class="h-6 w-px bg-ink/10 dark:bg-gray-700 mx-2"></div> {% if user.is_authenticated %}
-                        {% if user.role != 'landlord' %}
-                            <a href="{% url 'favorite_list' %}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-ink/70 dark:text-gray-300 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium transition text-sm">
-                                <i class="fa-solid fa-heart"></i> <span data-lang="favorites_btn">Маҳбубҳо</span>
+                    <div class="h-6 w-px bg-ink/10 dark:bg-gray-700 mx-2"></div> 
+                        
+                            <a href="/favorites/" data-lang="favorites_btn" class="flex items-center gap-2 px-4 py-2 rounded-lg text-ink/70 dark:text-gray-300 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium transition text-sm">
+                                <i class="fa-solid fa-heart"></i> Маҳбубҳо
                             </a>
-                        {% endif %}
+                        
 
-                        {% if user.role == 'landlord' %}
-                        <a href="{% url 'property_list' %}" data-lang="nav_properties" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Амволҳо</a>
-                        <a href="{% url 'create_property' %}" data-lang="nav_add" class="bg-emerald hover:bg-emerald-mid text-white px-4 py-2 rounded-lg font-display font-semibold text-sm transition">Эълон +</a>
-                        <a href="{% url 'create_propertyimages' %}" data-lang="add_images" class="border border-ink/15 dark:border-white/10 text-ink/70 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-ink/5 dark:hover:bg-white/10 font-medium transition text-sm">Иловаи сурат +</a>
-                        {% endif %}
+                        
 
-                        <a href="{% url 'logout' %}" data-lang="logout_btn" class="border border-ink/15 dark:border-white/10 text-ink/70 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-ink/5 dark:hover:bg-white/10 font-medium transition text-sm">Баромад</a>
-                    {% else %}
-                        <a href="{% url 'login' %}" data-lang="login_btn" class="text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold px-4 py-2 font-medium transition text-sm">Вуруд</a>
-                        <a href="{% url 'register' %}" data-lang="nav_register" class="bg-emerald hover:bg-emerald-mid text-white px-5 py-2 rounded-lg font-display font-semibold text-sm transition">Регистрация</a>
-                    {% endif %}
+                        <a href="/auth/logout/" data-lang="logout_btn" class="border border-ink/15 dark:border-white/10 text-ink/70 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-ink/5 dark:hover:bg-white/10 font-medium transition text-sm">Баромад</a>
+                    
                 </div>
 
                 <select id="langSelector" aria-label="Забони сайт / Язык сайта / Site language" class="bg-white dark:bg-white/10 border border-ink/10 dark:border-white/10 text-ink/70 dark:text-white py-1.5 px-2 sm:px-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-gold cursor-pointer text-xs sm:text-sm font-medium ml-1">
@@ -209,15 +203,9 @@
                     <i class="fa-solid fa-sun hidden dark:block text-gold text-sm"></i>
                 </button>
 
-                {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" data-lang-title="nav_profile" title="{{ user.username }}" class="w-8 h-8 sm:w-10 sm:h-10 bg-emerald text-white rounded-full overflow-hidden flex items-center justify-center font-display font-bold text-xs sm:text-sm ml-0.5 sm:ml-1 shrink-0 hover:opacity-90 transition">
-                    {% if user.photo %}
-                        <img src="{{ user.photo.url }}" alt="{{ user.username }}" class="w-full h-full object-cover">
-                    {% else %}
-                        {{ user.username|slice:":1"|upper }}
-                    {% endif %}
-                </a>
-                {% endif %}
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-emerald text-white rounded-full flex items-center justify-center font-display font-bold text-xs sm:text-sm ml-0.5 sm:ml-1 shrink-0" title="qalandlord">
+                    Q
+                </div>
 
                 <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-lg border border-ink/10 dark:border-white/10 hover:bg-ink/5 dark:hover:bg-white/10 transition text-ink/70 dark:text-white ml-0.5" aria-label="Кушодани меню" aria-expanded="false" aria-controls="mobile-menu">
                     <i class="fa-solid fa-bars"></i>
@@ -228,27 +216,21 @@
 
     <!-- ============ MOBILE MENU ============ -->
     <div id="mobile-menu" class="hidden lg:hidden border-t border-ink/10 dark:border-gray-800 bg-cream dark:bg-darkbg-card px-4 pt-3 pb-5 space-y-1" role="dialog" aria-modal="true" aria-label="Менюи мобилӣ">
-        <a href="{% url 'home' %}" data-lang="nav_home" class="block px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Асосӣ</a>
-        <a href="{% url 'about' %}" data-lang="nav_about" class="block px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Дар бораи мо</a>
-        <a href="{% url 'property_list' %}" data-lang="nav_properties" class="block px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Амволҳо</a>
+        <a href="/" data-lang="nav_home" class="block px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Асосӣ</a>
+        <a href="/about/" data-lang="nav_about" class="block px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Дар бораи мо</a>
+        <a href="/my-properties/" data-lang="nav_properties" class="block px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Амволҳо</a>
 
         <div class="h-px bg-ink/10 dark:bg-gray-800 my-2"></div>
 
-        {% if user.is_authenticated %}
-            {% if user.role != 'landlord' %}
-                <a href="{% url 'favorite_list' %}" class="flex items-center gap-2 px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium transition text-sm">
-                    <i class="fa-solid fa-heart"></i> <span data-lang="favorites_btn">Маҳбубҳо</span>
+        
+            
+                <a href="/favorites/" data-lang="favorites_btn" class="flex items-center gap-2 px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium transition text-sm">
+                    <i class="fa-solid fa-heart"></i> Маҳбубҳо
                 </a>
-            {% endif %}
-            {% if user.role == 'landlord' %}
-            <a href="{% url 'create_property' %}" data-lang="nav_add" class="block text-center px-4 py-3 rounded-lg bg-emerald text-white font-display font-semibold text-sm transition">Эълон +</a>
-            <a href="{% url 'create_propertyimages' %}" data-lang="add_images" class="block px-4 py-3 rounded-lg border border-ink/15 dark:border-white/10 text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/10 font-medium transition text-sm">Иловаи сурат +</a>
-            {% endif %}
-            <a href="{% url 'logout' %}" data-lang="logout_btn" class="block px-4 py-3 rounded-lg border border-ink/15 dark:border-white/10 text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/10 font-medium transition text-sm">Баромад</a>
-        {% else %}
-            <a href="{% url 'login' %}" data-lang="login_btn" class="block px-4 py-3 rounded-lg text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium transition text-sm">Вуруд</a>
-            <a href="{% url 'register' %}" data-lang="nav_register" class="block text-center px-4 py-3 rounded-lg bg-emerald text-white font-display font-semibold text-sm transition">Регистрация</a>
-        {% endif %}
+            
+            
+            <a href="/auth/logout/" data-lang="logout_btn" class="block px-4 py-3 rounded-lg border border-ink/15 dark:border-white/10 text-ink/80 dark:text-gray-200 hover:bg-ink/5 dark:hover:bg-white/10 font-medium transition text-sm">Баромад</a>
+        
     </div>
 </nav>
 
@@ -294,7 +276,66 @@
 </script>
 
     <main class="flex-grow">
-        {% block content %} {% endblock %}
+        
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Блоки Асосӣ (Заголовок) -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+        <p class="text-coral text-xs font-display font-bold uppercase tracking-[0.2em] mb-3">Comfort Home</p>
+        <h1 data-lang="about_title" class="font-display text-4xl font-extrabold text-ink dark:text-white mb-4">
+            Дар бораи <span class="gradient-text">Comfort Home</span>
+        </h1>
+        <p data-lang="about_subtitle" class="text-lg text-gray-500 dark:text-gray-400">
+            Мо ба шумо барои пайдо кардани беҳтарин ва қулайтарин хонаҳо ва амволҳо дар Тоҷикистон кӯмак мерасонем.
+        </p>
+    </div>
+
+    <!-- Намоиши Омор (Stats) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-20">
+        <div class="bg-white dark:bg-white/5 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-white/10">
+            <div class="text-4xl font-display font-extrabold gradient-text mb-2">12,000+</div>
+            <p data-lang="stat_clients" class="text-gray-500 dark:text-gray-400 font-medium">Мизоҷони қаноатманд</p>
+        </div>
+        <div class="bg-white dark:bg-white/5 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-white/10">
+            <div class="text-4xl font-display font-extrabold gradient-text mb-2">8,000+</div>
+            <p data-lang="stat_properties" class="text-gray-500 dark:text-gray-400 font-medium">Амволҳои фаъол</p>
+        </div>
+        <div class="bg-white dark:bg-white/5 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-white/10">
+            <div class="text-4xl font-display font-extrabold gradient-text mb-2">15+</div>
+            <p data-lang="stat_years" class="text-gray-500 dark:text-gray-400 font-medium">Сол таҷриба</p>
+        </div>
+    </div>
+
+    <!-- Платформаи Мо ва Хизматрасониҳо -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80" alt="About Us" class="rounded-3xl shadow-md w-full h-auto object-cover">
+        </div>
+        <div class="space-y-6">
+            <h2 data-lang="about_why_title" class="font-display text-3xl font-extrabold text-ink dark:text-white">
+                Чаро маҳз мо?
+            </h2>
+            <p data-lang="about_why_text" class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Платформаи мо ба соҳибони амвол имкон медиҳад, ки эълонҳои худро зуд ҷойгир кунанд, ва ба иҷорагирон имкон медиҳад, ки хонаи дилхоҳашонро пайдо кунанд.
+            </p>
+            
+            <!-- Корти хурди хусусиятҳо -->
+            <div class="flex items-start gap-4 p-4 bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm">
+                <div class="p-3 rounded-2xl flex-shrink-0" style="background-image: linear-gradient(135deg, rgba(255,107,74,0.15), rgba(255,193,69,0.15));">
+                    <i class="fa-solid fa-shield-halved text-xl text-coral"></i>
+                </div>
+                <div>
+                    <h4 data-lang="about_f1_title" class="font-display font-bold text-ink dark:text-white">Амнияти Пурра</h4>
+                    <p data-lang="about_f1_text" class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                        Ҳамаи соҳибони амвол ва эълонҳо санҷида мешаванд.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     </main>
 
     <footer class="bg-ink dark:bg-darkbg-card text-white mt-16">
@@ -310,7 +351,7 @@
             <h3 data-lang="footer_links" class="text-sm font-display font-semibold text-white mb-4 uppercase tracking-wide">Истинодҳо</h3>
             <ul class="space-y-2 text-white/50 text-sm">
                 <li><a href="/" data-lang="home_page" class="hover:text-gold transition">Саҳифаи асосӣ</a></li>
-                <li><a href="{% url 'about' %}" data-lang="terms_of_use" class="hover:text-gold transition">Дар бораи мо</a></li>
+                <li><a href="/about/" data-lang="terms_of_use" class="hover:text-gold transition">Дар бораи мо</a></li>
             </ul>
         </div>
         <div>
@@ -333,7 +374,7 @@
     </div>
 </footer>
 
-    {% if user.is_authenticated %}
+    
     <!-- ============ AI ASSISTANT WIDGET ============ -->
     <button id="chat-btn" type="button" aria-label="Кушодани ёрдамчии AI" aria-expanded="false" aria-controls="chat-window"
         class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-14 h-14 rounded-full gradient-btn glow-shadow text-white flex items-center justify-center text-xl transition active:scale-95">
@@ -360,32 +401,7 @@
             <button id="send-btn" type="button" data-lang="chat_send" aria-label="Фиристодани паём" class="gradient-btn text-white px-4 py-2 rounded-lg text-sm font-display font-semibold transition active:scale-95">Фиристодан</button>
         </form>
     </div>
-    {% endif %}
-
-    <!-- ============ SMART COMPARISON — floating bar + modal ============ -->
-    <div id="compare-bar" class="hidden fixed bottom-5 left-5 z-50 bg-white dark:bg-darkbg-card rounded-2xl shadow-lifted border border-ink/5 dark:border-white/10 pl-5 pr-3 py-3 flex items-center gap-3">
-        <div class="flex items-center gap-2 text-sm font-medium text-ink dark:text-white">
-            <i class="fa-solid fa-scale-balanced text-gold" aria-hidden="true"></i>
-            <span id="compare-count">0</span> <span data-lang="compare_selected">амвол интихоб шуд</span>
-        </div>
-        <button id="compare-open-btn" type="button" data-lang="compare_view" class="gradient-btn text-white text-sm font-display font-semibold px-4 py-2 rounded-lg transition active:scale-95">Муқоиса кардан</button>
-        <button id="compare-clear-btn" type="button" aria-label="Тоза кардан" class="w-8 h-8 rounded-lg flex items-center justify-center text-stone hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition">
-            <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
-        </button>
-    </div>
-
-    <div id="compare-modal" role="dialog" aria-modal="true" aria-label="Муқоисаи амволҳо" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4">
-        <div id="compare-modal-backdrop" class="absolute inset-0 bg-ink/60 backdrop-blur-sm"></div>
-        <div class="relative bg-white dark:bg-darkbg-card rounded-3xl shadow-lifted w-full max-w-5xl max-h-[85vh] overflow-hidden flex flex-col">
-            <div class="flex items-center justify-between px-6 py-5 border-b border-ink/5 dark:border-white/10 shrink-0">
-                <h2 class="font-display text-xl font-bold text-ink dark:text-white" data-lang="compare_title">Муқоисаи амволҳо</h2>
-                <button id="compare-close-btn" type="button" aria-label="Пӯшидан" class="p-2 rounded-lg hover:bg-ink/5 dark:hover:bg-white/10 transition">
-                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div id="compare-table-wrap" class="overflow-auto p-6"></div>
-        </div>
-    </div>
+    
 
     <script>
 
@@ -587,54 +603,7 @@
 
             fav_toggle_add: "Илова ба маҳбубҳо",
             fav_toggle_remove: "Маҳбубҳо (Нест кардан)",
-            login_to_save: "Барои маҳфуз кардан ворид шавед",
-
-            verified_label: "Тасдиқшуда",
-            compare_add: "Муқоиса",
-            compare_selected: "амвол интихоб шуд",
-            compare_view: "Муқоиса кардан",
-            compare_clear: "Тоза кардан",
-            compare_title: "Муқоисаи амволҳо",
-            compare_empty: "Ҳанӯз амволе барои муқоиса интихоб нашудааст.",
-            compare_max_reached: "Шумо метавонед ҳадди аксар 4 амволро муқоиса кунед.",
-            compare_remove: "Аз муқоиса баровардан",
-            compare_details: "Муфассал",
-            compare_row_price: "Нарх",
-            compare_row_type: "Намуд",
-            compare_row_rooms: "Ҳуҷраҳо",
-            compare_row_area: "Масоҳат",
-            compare_row_floor: "Ошёна",
-            compare_row_city: "Шаҳр",
-            compare_row_district: "Ноҳия",
-            compare_row_available: "Дастрасӣ",
-            compare_row_verified: "Тасдиқ",
-            compare_yes: "Ҳа",
-            compare_no: "Не",
-
-            valuation_title: "Баҳодиҳии нарх",
-            valuation_yours: "Нархи шумо",
-            valuation_market: "Миёнаи бозор",
-            valuation_above: "аз миёнаи бозор баландтар",
-            valuation_below: "аз миёнаи бозор пасттар",
-            valuation_average: "тақрибан дар сатҳи бозор",
-            valuation_disclaimer: "* Ин баҳодиҳӣ дар асоси эълонҳои воқеии дигар дар ҳамин шаҳр ва навъ ҳисоб карда шудааст.",
-            valuation_no_data: "Барои баҳодиҳӣ дар ин шаҳр/навъ ҳанӯз эълони кофии монанд нест.",
-            valuation_sample_size: "дар асоси {n} эълони монанд",
-
-            profile_role_landlord: "Соҳибмулк",
-            profile_role_tenant: "Иҷорагир",
-            profile_role_admin: "Маъмур",
-            profile_your_listings: "Эълонҳои шумо",
-            profile_manage_listings: "Идора кардани эълонҳо",
-            profile_your_favorites: "Амволҳои маҳбуб",
-            profile_edit_title: "Таҳрири профил",
-            profile_photo: "Сурати профил",
-            profile_bio: "Дар бораи худ",
-            profile_phone: "Рақами телефон",
-            nav_profile: "Профил",
-
-            map_title: "Амволҳо дар харита",
-            map_view_details: "Дидани тафсилот"
+            login_to_save: "Барои маҳфуз кардан ворид шавед"
 
         },
 
@@ -835,54 +804,7 @@
 
             fav_toggle_add: "Добавить в избранное",
             fav_toggle_remove: "Избранное (Удалить)",
-            login_to_save: "Войдите, чтобы сохранить",
-
-            verified_label: "Проверено",
-            compare_add: "Сравнить",
-            compare_selected: "объект(ов) выбрано",
-            compare_view: "Сравнить",
-            compare_clear: "Очистить",
-            compare_title: "Сравнение объектов",
-            compare_empty: "Пока не выбрано ни одного объекта для сравнения.",
-            compare_max_reached: "Можно сравнивать не более 4 объектов одновременно.",
-            compare_remove: "Убрать из сравнения",
-            compare_details: "Подробнее",
-            compare_row_price: "Цена",
-            compare_row_type: "Тип",
-            compare_row_rooms: "Комнаты",
-            compare_row_area: "Площадь",
-            compare_row_floor: "Этаж",
-            compare_row_city: "Город",
-            compare_row_district: "Район",
-            compare_row_available: "Доступность",
-            compare_row_verified: "Проверка",
-            compare_yes: "Да",
-            compare_no: "Нет",
-
-            valuation_title: "Оценка цены",
-            valuation_yours: "Ваша цена",
-            valuation_market: "Средняя по рынку",
-            valuation_above: "выше средней по рынку",
-            valuation_below: "ниже средней по рынку",
-            valuation_average: "примерно на уровне рынка",
-            valuation_disclaimer: "* Эта оценка рассчитана на основе других реальных объявлений в этом городе и с этим типом недвижимости.",
-            valuation_no_data: "Пока недостаточно похожих объявлений в этом городе/типе для оценки.",
-            valuation_sample_size: "на основе {n} похожих объявлений",
-
-            profile_role_landlord: "Собственник",
-            profile_role_tenant: "Арендатор",
-            profile_role_admin: "Администратор",
-            profile_your_listings: "Ваши объявления",
-            profile_manage_listings: "Управление объявлениями",
-            profile_your_favorites: "Избранные объекты",
-            profile_edit_title: "Редактировать профиль",
-            profile_photo: "Фото профиля",
-            profile_bio: "О себе",
-            profile_phone: "Номер телефона",
-            nav_profile: "Профиль",
-
-            map_title: "Объекты на карте",
-            map_view_details: "Подробнее"
+            login_to_save: "Войдите, чтобы сохранить"
 
         },
 
@@ -1085,54 +1007,7 @@
 
             fav_toggle_add: "Add to Favorites",
             fav_toggle_remove: "Favorited (Remove)",
-            login_to_save: "Log in to save",
-
-            verified_label: "Verified",
-            compare_add: "Compare",
-            compare_selected: "propert(y/ies) selected",
-            compare_view: "Compare",
-            compare_clear: "Clear",
-            compare_title: "Compare Properties",
-            compare_empty: "No properties selected for comparison yet.",
-            compare_max_reached: "You can compare up to 4 properties at a time.",
-            compare_remove: "Remove from comparison",
-            compare_details: "Details",
-            compare_row_price: "Price",
-            compare_row_type: "Type",
-            compare_row_rooms: "Rooms",
-            compare_row_area: "Area",
-            compare_row_floor: "Floor",
-            compare_row_city: "City",
-            compare_row_district: "District",
-            compare_row_available: "Availability",
-            compare_row_verified: "Verified",
-            compare_yes: "Yes",
-            compare_no: "No",
-
-            valuation_title: "Price Valuation",
-            valuation_yours: "Your Price",
-            valuation_market: "Market Average",
-            valuation_above: "above the market average",
-            valuation_below: "below the market average",
-            valuation_average: "roughly in line with the market",
-            valuation_disclaimer: "* This estimate is calculated from other real listings in the same city and property type.",
-            valuation_no_data: "Not enough similar listings in this city/type yet for a valuation.",
-            valuation_sample_size: "based on {n} similar listings",
-
-            profile_role_landlord: "Landlord",
-            profile_role_tenant: "Tenant",
-            profile_role_admin: "Admin",
-            profile_your_listings: "Your Listings",
-            profile_manage_listings: "Manage Listings",
-            profile_your_favorites: "Favorite Properties",
-            profile_edit_title: "Edit Profile",
-            profile_photo: "Profile Photo",
-            profile_bio: "About You",
-            profile_phone: "Phone Number",
-            nav_profile: "Profile",
-
-            map_title: "Properties on the Map",
-            map_view_details: "View Details"
+            login_to_save: "Log in to save"
 
         }
 
@@ -1140,258 +1015,51 @@
 
 
 
-    /**
-     * updateAllTranslations — рӯимарзи як элементро/тамоми ҳуҷҷатро ба забони ҷории
-     * интихобшуда мутобиқ мекунад. Дастгирии чор шакли атрибут:
-     *   data-lang            -> textContent
-     *   data-lang-placeholder-> placeholder (input/textarea)
-     *   data-lang-title      -> title (tooltip-ҳо)
-     *   data-lang-value      -> value (тугмаҳои input[type=submit/button])
-     *
-     * Устувор аст: агар калид дар луғат вуҷуд надошта бошад, элемент бидуни хато
-     * дастнахӯрда мемонад (fallback ба матни аслии HTML).
-     *
-     * Барои маҳтавои динамикӣ (масалан посухи чат-и AI, натиҷаҳои AJAX) пас аз
-     * илова кардани HTML-и нав ба саҳифа даъват кунед: window.updateAllTranslations()
-     * — ё бо root ихтиёрӣ барои маҳдуд кардани домана ба як контейнери мушаххас:
-     *   window.updateAllTranslations(document.getElementById('chat-body'))
-     */
-    function updateAllTranslations(root) {
-        root = root || document;
-        const lang = (localStorage.getItem('selectedLang') || 'tg').toLowerCase();
-        const dict = translations[lang] || translations.tg;
+    function applyTranslations() {
 
-        const applyToAttr = (selector, apply) => {
-            root.querySelectorAll(selector).forEach((element) => {
-                const key = element.getAttribute(selector.match(/\[([^\]]+)\]/)[1]);
-                if (!key) return;
-                const text = dict[key];
-                if (typeof text === 'string') apply(element, text);
-            });
-        };
+        const lang = localStorage.getItem('selectedLang') || 'tg';
 
-        applyToAttr('[data-lang]:not([data-lang-count])', (el, text) => { el.textContent = text; });
-        applyToAttr('[data-lang-placeholder]', (el, text) => { el.placeholder = text; });
-        applyToAttr('[data-lang-title]', (el, text) => { el.title = text; });
-        applyToAttr('[data-lang-value]', (el, text) => { el.value = text; });
+        document.getElementById('langSelector').value = lang;
 
-        // data-lang-count — барои ҷумлаҳое, ки шумора доранд (масалан "дар асоси {n} эълон"):
-        // {n} дар матни тарҷумашуда бо арзиши атрибут иваз мешавад.
-        root.querySelectorAll('[data-lang][data-lang-count]').forEach((element) => {
+
+
+        document.querySelectorAll('[data-lang]').forEach(element => {
+
             const key = element.getAttribute('data-lang');
-            const text = dict[key];
-            if (typeof text === 'string') {
-                element.textContent = text.replace('{n}', element.getAttribute('data-lang-count'));
+
+            if (translations[lang] && translations[lang][key]) {
+
+                element.innerText = translations[lang][key];
+
+            }
+
+        });
+
+        document.querySelectorAll('[data-lang-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-lang-placeholder');
+            if (translations[lang] && translations[lang][key]) {
+                element.setAttribute('placeholder', translations[lang][key]);
             }
         });
 
-        return dict;
-    }
-    window.updateAllTranslations = updateAllTranslations;
-
-    // escapeHtml — саросарӣ, барои дар бехатарӣ гузоштани маълумоти корбарӣ/берунӣ
-    // ба innerHTML (пешгирии XSS дар чат ва ҷадвали муқоиса).
-    function escapeHtml(str) {
-        return String(str).replace(/[&<>"']/g, (ch) => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-        }[ch]));
-    }
-    window.escapeHtml = escapeHtml;
-
-    // ============ SMART COMPARISON — муқоисаи амволҳо (пурра дар браузер, бе бекенд) ============
-    const COMPARE_KEY = 'compareList';
-    const COMPARE_MAX = 4;
-    window.__compareCatalog = window.__compareCatalog || {};
-
-    function getCompareIds() {
-        try {
-            const raw = JSON.parse(localStorage.getItem(COMPARE_KEY) || '[]');
-            return Array.isArray(raw) ? raw : [];
-        } catch (e) {
-            return [];
-        }
     }
 
-    function syncCompareCheckboxes() {
-        const ids = getCompareIds();
-        document.querySelectorAll('.compare-checkbox').forEach((cb) => {
-            cb.checked = ids.includes(parseInt(cb.dataset.propertyId, 10));
-        });
-    }
 
-    function refreshCompareUI() {
-        const ids = getCompareIds();
-        const bar = document.getElementById('compare-bar');
-        const countEl = document.getElementById('compare-count');
-        if (bar && countEl) {
-            countEl.textContent = ids.length;
-            bar.classList.toggle('hidden', ids.length === 0);
-        }
-        syncCompareCheckboxes();
-    }
-
-    function setCompareIds(ids) {
-        localStorage.setItem(COMPARE_KEY, JSON.stringify(ids));
-        refreshCompareUI();
-    }
-
-    // Global — даъват аз checkbox-и "Муқоиса" дар ҳар кортаи амвол.
-    function toggleCompare(id, checked) {
-        id = parseInt(id, 10);
-        let ids = getCompareIds();
-        if (checked) {
-            if (ids.includes(id)) return;
-            if (ids.length >= COMPARE_MAX) {
-                const lang = (localStorage.getItem('selectedLang') || 'tg').toLowerCase();
-                alert((translations[lang] && translations[lang].compare_max_reached) || 'Max 4 properties.');
-                syncCompareCheckboxes();
-                return;
-            }
-            ids.push(id);
-        } else {
-            ids = ids.filter((x) => x !== id);
-        }
-        setCompareIds(ids);
-    }
-    window.toggleCompare = toggleCompare;
-
-    // Event delegation — кор мекунад барои checkbox-ҳое, ки минбаъд низ ба саҳифа
-    // илова мешаванд (масалан пас аз AJAX), бе ниёз ба onchange-и inline дар HTML.
-    document.addEventListener('change', (e) => {
-        if (e.target.matches && e.target.matches('.compare-checkbox')) {
-            toggleCompare(e.target.dataset.propertyId, e.target.checked);
-        }
-    });
-
-    function removeFromCompare(id) {
-        toggleCompare(id, false);
-        renderCompareTable();
-    }
-    window.removeFromCompare = removeFromCompare;
-
-    // Global — саҳифаҳое, ки рӯйхати амволро нишон медиҳанд (кортаҳо), маълумоти
-    // JSON-и худро ба ин catalog илова мекунанд, то ҷадвали муқоиса битавонад
-    // онҳоро аз рӯи ID пайдо кунад — новобаста аз он, ки корбар аз кадом саҳифа
-    // амволро ба муқоиса илова кардааст.
-    function registerCompareData(list) {
-        (list || []).forEach((p) => { window.__compareCatalog[p.id] = p; });
-        refreshCompareUI();
-    }
-    window.registerCompareData = registerCompareData;
-
-    function renderCompareTable() {
-        const wrap = document.getElementById('compare-table-wrap');
-        if (!wrap) return;
-        const lang = (localStorage.getItem('selectedLang') || 'tg').toLowerCase();
-        const dict = translations[lang] || translations.tg;
-        const ids = getCompareIds();
-        const items = ids.map((id) => window.__compareCatalog[id]).filter(Boolean);
-
-        if (!items.length) {
-            wrap.innerHTML = `<p class="text-center text-stone dark:text-gray-400 py-12">${escapeHtml(dict.compare_empty)}</p>`;
-            return;
-        }
-
-        const rows = [
-            { label: dict.compare_row_price, render: (p) => `<span class="font-display font-bold text-emerald dark:text-gold">${Number(p.price).toLocaleString()} TJS</span>` },
-            { label: dict.compare_row_type, render: (p) => escapeHtml(p.type || '—') },
-            { label: dict.compare_row_rooms, render: (p) => escapeHtml(p.rooms ?? '—') },
-            { label: dict.compare_row_area, render: (p) => `${escapeHtml(p.area ?? '—')} m²` },
-            { label: dict.compare_row_floor, render: (p) => escapeHtml(p.floor ?? '—') },
-            { label: dict.compare_row_city, render: (p) => escapeHtml(p.city || '—') },
-            { label: dict.compare_row_district, render: (p) => escapeHtml(p.district || '—') },
-            { label: dict.compare_row_available, render: (p) => `<span class="${p.available ? 'text-emerald dark:text-gold' : 'text-red-500'} font-semibold">${p.available ? dict.compare_yes : dict.compare_no}</span>` },
-            { label: dict.compare_row_verified, render: (p) => p.verified ? `<i class="fa-solid fa-circle-check text-gold" aria-hidden="true"></i> <span class="font-semibold text-emerald dark:text-gold">${dict.compare_yes}</span>` : `<span class="text-stone dark:text-gray-500">${dict.compare_no}</span>` },
-        ];
-
-        const headerCells = items.map((p) => `
-            <th class="p-4 min-w-[180px] align-bottom">
-                <div class="relative rounded-xl overflow-hidden h-28 mb-3 bg-cream dark:bg-white/5">
-                    ${p.image ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.title)}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-stone/40"><i class="fa-regular fa-image text-2xl"></i></div>`}
-                    <button type="button" onclick="removeFromCompare(${p.id})" aria-label="${escapeHtml(dict.compare_remove)}" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-ink/60 hover:bg-red-500 text-white flex items-center justify-center text-xs transition">
-                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <p class="font-display font-semibold text-sm text-ink dark:text-white leading-snug mb-2">${escapeHtml(p.title)}</p>
-                <a href="${escapeHtml(p.url)}" class="inline-block text-xs font-semibold text-emerald dark:text-gold hover:underline">${escapeHtml(dict.compare_details)} &rarr;</a>
-            </th>
-        `).join('');
-
-        const bodyRows = rows.map((row) => `
-            <tr class="border-t border-ink/5 dark:border-white/10">
-                <td class="p-4 text-xs font-bold uppercase tracking-wide text-stone dark:text-gray-400 sticky left-0 bg-white dark:bg-darkbg-card">${escapeHtml(row.label)}</td>
-                ${items.map((p) => `<td class="p-4 text-sm text-ink dark:text-gray-200">${row.render(p)}</td>`).join('')}
-            </tr>
-        `).join('');
-
-        wrap.innerHTML = `
-            <table class="w-full border-collapse">
-                <thead><tr>
-                    <th class="p-4 sticky left-0 bg-white dark:bg-darkbg-card"></th>
-                    ${headerCells}
-                </tr></thead>
-                <tbody>${bodyRows}</tbody>
-            </table>
-        `;
-    }
-
-    (function initCompareModal() {
-        const bar = document.getElementById('compare-bar');
-        if (!bar) return;
-        const modal = document.getElementById('compare-modal');
-        const openBtn = document.getElementById('compare-open-btn');
-        const closeBtn = document.getElementById('compare-close-btn');
-        const backdrop = document.getElementById('compare-modal-backdrop');
-        const clearBtn = document.getElementById('compare-clear-btn');
-
-        const openModal = () => {
-            renderCompareTable();
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        };
-        const closeModal = () => {
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
-        };
-
-        openBtn.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
-        backdrop.addEventListener('click', closeModal);
-        clearBtn.addEventListener('click', () => setCompareIds([]));
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
-        });
-
-        refreshCompareUI();
-    })();
-
-    /**
-     * changeLanguage — забони фаъоли UI-ро иваз мекунад: дар localStorage захира
-     * мекунад, ҳолати селектор ва атрибути lang-и <html>-ро навсозӣ мекунад, ва
-     * updateAllTranslations()-ро дар тамоми ҳуҷҷат иҷро мекунад.
-     * Global аст (window.changeLanguage), то аз ҳар ҷои дигари саҳифа низ даъват шавад.
-     */
-    function changeLanguage(lang) {
-        lang = (lang || 'tg').toLowerCase();
-        if (!translations[lang]) lang = 'tg';
-
-        localStorage.setItem('selectedLang', lang);
-
-        const selector = document.getElementById('langSelector');
-        if (selector) selector.value = lang;
-
-        updateAllTranslations();
-
-        document.documentElement.setAttribute('lang', lang);
-    }
-    window.changeLanguage = changeLanguage;
 
     document.getElementById('langSelector').addEventListener('change', (e) => {
-        changeLanguage(e.target.value);
+
+        localStorage.setItem('selectedLang', e.target.value);
+
+        applyTranslations();
+
     });
 
+
+
     window.addEventListener('DOMContentLoaded', () => {
-        changeLanguage(localStorage.getItem('selectedLang') || 'tg');
+
+        applyTranslations();
+
     });
 
 
@@ -1419,10 +1087,9 @@
     const chatBody = document.getElementById('chat-body');
 
     if (chatBtn && chatWindow && sendBtn && input && chatBody) {
-        const getCsrfToken = () => {
-            const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
-            return match ? decodeURIComponent(match[1]) : '';
-        };
+        const escapeHtml = (str) => str.replace(/[&<>"']/g, (ch) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+        }[ch]));
 
         const setChatOpen = (open) => {
             chatWindow.classList.toggle('hidden', !open);
@@ -1451,11 +1118,8 @@
             try {
                 const response = await fetch('/ask-groq/', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken(),
-                    },
-                    body: JSON.stringify({message: msg, lang: lang})
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: msg})
                 });
                 const data = await response.json();
                 chatBody.insertAdjacentHTML('beforeend', `<div class="text-left"><span class="inline-block bg-white dark:bg-white/10 border border-ink/5 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-ink dark:text-gray-100"><strong class="text-emerald dark:text-gold">${aiLabel}:</strong> ${escapeHtml(String(data.response ?? ''))}</span></div>`);
@@ -1463,9 +1127,6 @@
                 chatBody.insertAdjacentHTML('beforeend', `<div class="text-left"><span class="inline-block bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-300 rounded-lg px-3 py-1.5 text-xs">${aiLabel}: —</span></div>`);
             }
             chatBody.scrollTop = chatBody.scrollHeight;
-            // Маҳтавои нав ба чат илова шуд — агар дар оянда дар он [data-lang]
-            // элементҳо бошанд (масалан тугмаҳои амал дар посухи AI), тарҷума мешаванд.
-            window.updateAllTranslations(chatBody);
         });
     }
 

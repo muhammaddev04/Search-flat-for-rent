@@ -1,100 +1,98 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md border border-gray-100 mt-12 mb-12">
-    <h2 data-lang="form_prop_title" class="text-2xl font-bold text-gray-900 mb-6 text-center">Формаи амвол</h2>
-    
-    {% if error %}
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl mb-6">
-        <div class="flex">
-            <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>
-            </div>
-            <div class="ml-3">
-                <p class="text-sm text-red-700 font-medium">{{ error }}</p>
-            </div>
-        </div>
+<div class="max-w-2xl mx-auto bg-white dark:bg-white/5 p-8 rounded-3xl shadow-soft border border-ink/5 dark:border-white/10 mt-12 mb-12">
+    <h2 data-lang="form_prop_title" class="font-display text-2xl font-bold text-ink dark:text-white mb-6 text-center">Формаи амвол</h2>
+
+    {% if form.non_field_errors %}
+    <div class="bg-red-50 dark:bg-red-500/10 border-l-4 border-red-500 p-4 rounded-xl mb-6">
+        {% for err in form.non_field_errors %}
+        <p class="text-sm text-red-700 dark:text-red-300 font-medium">{{ err }}</p>
+        {% endfor %}
     </div>
     {% endif %}
-    
-    <form method="POST" class="space-y-5">
+
+    <form method="POST" class="dh-form space-y-5">
         {% csrf_token %}
-        
+
         <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="table_title">Ном *</label>
-            <input type="text" name="title" value="{{ property.title}}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <label data-lang="table_title">Ном *</label>
+            {{ form.title }}
+            {% for err in form.title.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
         </div>
 
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="label_type">Намуди амвол *</label>
-                <select name="property_type" id="property_type" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
-                    <option value="apartment" {% if property.property_type == 'apartment' %}selected{% endif %}>Квартира</option>
-                    <option value="house" {% if property.property_type == 'house' %}selected{% endif %}>Ҳавлигӣ</option>
-                    <option value="commercial" {% if property.property_type == 'commercial' %}selected{% endif %}>Тиҷоратӣ</option>
-                </select>
+                <label data-lang="label_type">Намуди амвол *</label>
+                {{ form.property_type }}
+                {% for err in form.property_type.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
             </div>
-            
+
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="table_price">Нарх (TJS) *</label>
-                <input type="number" step="any" name="price" value="{{ property.price}}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <label data-lang="table_price">Нарх (TJS) *</label>
+                {{ form.price }}
+                {% for err in form.price.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="rooms">Ҳуҷраҳо *</label>
-                <input type="number" name="rooms" value="{{ property.rooms}}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-            </div>
-            
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="area">Масоҳат (-м²) *</label>
-                <input type="number" step="any" name="area" value="{{ property.area}}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <label data-lang="rooms">Ҳуҷраҳо *</label>
+                {{ form.rooms }}
+                {% for err in form.rooms.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
             </div>
 
-            
+            <div>
+                <label data-lang="area">Масоҳат (-м²) *</label>
+                {{ form.area }}
+                {% for err in form.area.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
+            </div>
         </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="floor">Ошёна</label>
-                <input type="number" step="any" name="floor" value="{{ property.floor}}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-            </div>
+        <div>
+            <label data-lang="floor">Ошёна</label>
+            {{ form.floor }}
+            {% for err in form.floor.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
+        </div>
 
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="table_city">Шаҳр</label>
-                <input type="text" name="city" value="{{ property.city}}" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <label data-lang="table_city">Шаҳр</label>
+                {{ form.city }}
+                {% for err in form.city.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
             </div>
-            
+
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="label_district">Ноҳия *</label>
-                <input type="text" name="district" value="{{ property.district}}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <label data-lang="label_district">Ноҳия *</label>
+                {{ form.district }}
+                {% for err in form.district.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
             </div>
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="label_address">Суроғаи дақиқ *</label>
-            <input type="text" name="address_details" value="{{ property.address_details}}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <label data-lang="label_address">Суроғаи дақиқ *</label>
+            {{ form.address_details }}
+            {% for err in form.address_details.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="label_amenities">Шароитҳо *</label>
-            <input type="text" name="amenities" value="{{ property.amenities}}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <label data-lang="label_amenities">Шароитҳо *</label>
+            {{ form.amenities }}
+            {% for err in form.amenities.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1" data-lang="description">Тавсиф</label>
-            <textarea name="description" rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">{{ property.description }}</textarea>
+            <label data-lang="description">Тавсиф</label>
+            {{ form.description }}
+            {% for err in form.description.errors %}<p class="text-red-500 text-xs mt-1">{{ err }}</p>{% endfor %}
         </div>
 
-        <div class="flex items-center">
-            <input id="is_available" name="is_available" type="checkbox" {% if form.is_available.value != False %}checked{% endif %} class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded-md cursor-pointer">
-            <label for="is_available" class="ml-2 text-sm font-medium text-gray-700 cursor-pointer" data-lang="label_available">Барои иҷора/фурӯш омода аст</label>
+        <div class="flex items-center gap-2">
+            {{ form.is_available }}
+            <label for="{{ form.is_available.id_for_label }}" class="!mb-0 !text-sm !normal-case !font-medium !tracking-normal text-ink/80 dark:text-gray-300 cursor-pointer" data-lang="label_available">Барои иҷора/фурӯш омода аст</label>
         </div>
 
-        <button type="submit" data-lang="save_btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-indigo-100">
+        <button type="submit" data-lang="save_btn" class="gradient-btn glow-shadow w-full text-white font-display font-bold py-3 rounded-xl transition">
             Захира кардан
         </button>
     </form>

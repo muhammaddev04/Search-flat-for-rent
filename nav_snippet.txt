@@ -1,0 +1,14 @@
+10 dark:bg-gray-700 mx-2"></div> 
+                        
+                            <a href="/favorites/" data-lang="favorites_btn" class="flex items-center gap-2 px-4 py-2 rounded-lg text-ink/70 dark:text-gray-300 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium transition text-sm">
+                                <i class="fa-solid fa-heart"></i> Маҳбубҳо
+                            </a>
+                        
+
+                        
+
+                        <a href="/auth/logout/" data-lang="logout_btn" class="border border-ink/15 dark:border-white/10 text-ink/70 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-ink/5 dark:hover:bg-white/10 font-medium transition text-sm">Баромад</a>
+                    
+                </div>
+
+                <select id="langSelector" aria-label="Забони сайт / Язык сайта / Site language" class="bg-white dark:bg-white/10 bord

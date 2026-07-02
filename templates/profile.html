@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+
+    <!-- Сарлавҳа -->
+    <div class="flex items-center gap-5 mb-10">
+        <div class="w-20 h-20 rounded-full overflow-hidden bg-emerald text-white flex items-center justify-center font-display font-bold text-3xl shrink-0 border-4 border-white dark:border-darkbg-card shadow-soft">
+            {% if user.photo %}
+                <img src="{{ user.photo.url }}" alt="{{ user.username }}" class="w-full h-full object-cover">
+            {% else %}
+                {{ user.username|slice:":1"|upper }}
+            {% endif %}
+        </div>
+        <div>
+            <h1 class="font-display text-2xl sm:text-3xl font-bold text-ink dark:text-white">{{ user.username }}</h1>
+            <p class="text-stone dark:text-gray-400 text-sm">{{ user.email }}</p>
+            <span class="inline-flex items-center gap-1.5 mt-2 bg-emerald/10 text-emerald dark:text-gold dark:bg-gold/10 text-xs font-bold uppercase px-2.5 py-1 rounded-full">
+                <i class="fa-solid {% if user.role == 'landlord' %}fa-building{% elif user.role == 'admin' %}fa-shield-halved{% else %}fa-user{% endif %}" aria-hidden="true"></i>
+                {% if user.role == 'landlord' %}<span data-lang="profile_role_landlord">Соҳибмулк</span>
+                {% elif user.role == 'admin' %}<span data-lang="profile_role_admin">Маъмур</span>
+                {% else %}<span data-lang="profile_role_tenant">Иҷорагир</span>{% endif %}
+            </span>
+        </div>
+    </div>
+
+    <!-- Омори вобаста ба нақш -->
+    {% if user.role == 'landlord' %}
+    <div class="bg-white dark:bg-white/5 rounded-2xl border border-ink/5 dark:border-white/10 shadow-sm p-6 mb-8 flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-cream dark:bg-white/5 flex items-center justify-center">
+                <i class="fa-solid fa-house-chimney text-gold text-lg" aria-hidden="true"></i>
+            </div>
+            <div>
+                <p class="font-display text-2xl font-bold text-ink dark:text-white">{{ stats.property_count }}</p>
+                <p class="text-stone dark:text-gray-400 text-sm" data-lang="profile_your_listings">Эълонҳои шумо</p>
+            </div>
+        </div>
+        <a href="{% url 'property_list' %}" data-lang="profile_manage_listings" class="text-emerald dark:text-gold font-semibold text-sm hover:underline">Идора кардани эълонҳо &rarr;</a>
+    </div>
+    {% elif user.role == 'tenant' %}
+    <div class="bg-white dark:bg-white/5 rounded-2xl border border-ink/5 dark:border-white/10 shadow-sm p-6 mb-8 flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-cream dark:bg-white/5 flex items-center justify-center">
+                <i class="fa-solid fa-heart text-gold text-lg" aria-hidden="true"></i>
+            </div>
+            <div>
+                <p class="font-display text-2xl font-bold text-ink dark:text-white">{{ stats.favorite_count }}</p>
+                <p class="text-stone dark:text-gray-400 text-sm" data-lang="profile_your_favorites">Амволҳои маҳбуб</p>
+            </div>
+        </div>
+        <a href="{% url 'favorite_list' %}" data-lang="favorites_btn" class="text-emerald dark:text-gold font-semibold text-sm hover:underline">Маҳбубҳо &rarr;</a>
+    </div>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="bg-emerald/10 text-emerald dark:text-gold dark:bg-gold/10 p-3 rounded-xl text-sm mb-6 font-medium text-center">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Формаи таҳрир -->
+    <div class="bg-white dark:bg-white/5 rounded-3xl border border-ink/5 dark:border-white/10 shadow-soft p-6 sm:p-8">
+        <h2 class="font-display text-lg font-bold text-ink dark:text-white mb-6" data-lang="profile_edit_title">Таҳрири профил</h2>
+        <form method="POST" enctype="multipart/form-data" class="dh-form space-y-5">
+            {% csrf_token %}
+            <div>
+                <label data-lang="profile_photo">Сурати профил</label>
+                <input type="file" name="photo" accept="image/*">
+            </div>
+            <div>
+                <label data-lang="profile_bio">Дар бораи худ</label>
+                <textarea name="bio" rows="4" placeholder="Дар бораи худ каме нависед...">{{ user.bio|default:"" }}</textarea>
+            </div>
+            <div>
+                <label data-lang="profile_phone">Рақами телефон</label>
+                <input type="text" name="phone_number" value="{{ user.phone_number|default:"" }}" placeholder="9XXXXXXXX">
+            </div>
+            <button type="submit" data-lang="save_btn" class="gradient-btn glow-shadow w-full text-white font-display font-bold py-3 rounded-xl transition">Захира кардан</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

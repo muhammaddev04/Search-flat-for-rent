@@ -1,13 +1,14 @@
+
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100 mt-20 text-center">
-    <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+<div class="max-w-md mx-auto bg-white dark:bg-white/5 p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-white/10 mt-20 text-center">
+    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl text-coral" style="background-image: linear-gradient(135deg, rgba(255,107,74,0.15), rgba(255,193,69,0.15));">
         <i class="fa-regular fa-envelope-open"></i>
     </div>
     
-    <h2 data-lang="conf_h2" class="text-2xl font-bold text-gray-900 mb-2">Тасдиқи почтаи электронӣ</h2>
-    <p data-lang="conf_sub" class="text-gray-500 text-sm mb-6">Лутфан коди ба почтаи шумо фиристодашударо ворид кунед.</p>
+    <h2 data-lang="conf_h2" class="font-display text-2xl font-extrabold text-ink dark:text-white mb-2">Тасдиқи почтаи электронӣ</h2>
+    <p data-lang="conf_sub" class="text-gray-500 dark:text-gray-400 text-sm mb-6">Лутфан коди ба почтаи шумо фиристодашударо ворид кунед.</p>
 
     {% if error %}
         <div class="bg-red-50 text-red-600 p-3 rounded-xl text-sm mb-4 font-medium border border-red-200">
@@ -21,10 +22,10 @@
         
         <div>
             <input type="text" name="code" maxlength="6" placeholder="******" required 
-                   class="w-full text-center text-2xl tracking-widest px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-bold">
+                   class="w-full text-center text-2xl tracking-widest px-4 py-3 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-xl focus:ring-2 focus:ring-coral focus:border-coral focus:outline-none font-display font-bold">
         </div>
         
-        <button type="submit" data-lang="conf_btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition">
+        <button type="submit" data-lang="conf_btn" class="gradient-btn glow-shadow w-full text-white font-display font-bold py-3 rounded-xl transition">
             Тасдиқ кардан
         </button>
     </form>

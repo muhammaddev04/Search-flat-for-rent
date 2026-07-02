@@ -1,182 +1,282 @@
 {% extends 'base.html' %}
+{% block title %}Comfort Home — Асосӣ{% endblock %}
 {% block content %}
 
-<div class="relative bg-indigo-900 text-white py-20 px-4 bg-cover bg-center overflow-hidden" style="background-image: linear-gradient(rgba(30, 27, 75, 0.85), rgba(30, 27, 75, 0.85)), url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80');">
-
-    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10 lg:gap-4">
-
-        <!-- Тарафи чап — матн ва формаи ҷустуҷӯ (марказӣ) -->
-        <div class="w-full lg:w-3/5 flex flex-col items-center text-center">
-            <h1 data-lang="hero_title" class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">Хонаи орзуҳои худро бо Comfort Home пайдо кунед!</h1>
-            <p data-lang="hero_sub" class="text-lg md:text-xl text-indigo-200 mb-8 max-w-2xl">Беҳтарин амволҳо ва хонаҳо барои иҷора ва фурӯш дар Тоҷикистон!</p>
-
-            <form method="GET" action="{% url 'home' %}" class="bg-white p-4 rounded-2xl shadow-xl grid grid-cols-1 sm:grid-cols-2 gap-3 items-end text-left w-full max-w-2xl">
-
-                <div class="relative w-full">
-                    <label data-lang="label_location" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Шаҳр-</label>
-                    <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Шаҳр..." class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
+    <!-- ============ HERO ============ -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 pb-10">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
+            <div class="lg:col-span-2 order-2 lg:order-1">
+                <p class="reveal in text-gold text-xs font-semibold uppercase tracking-[0.25em] mb-5">Comfort Home · Тоҷикистон</p>
+                <h1 data-lang="hero_title" class="reveal in font-display text-4xl sm:text-5xl font-bold text-ink dark:text-white leading-[1.15] mb-6">Хонаи орзуҳои худро бо Comfort Home пайдо кунед</h1>
+                <p data-lang="hero_sub" class="reveal in text-base text-stone dark:text-gray-400 mb-8 leading-relaxed">Беҳтарин амволҳо ва хонаҳо барои иҷора дар Тоҷикистон.</p>
+                <div class="reveal in flex items-center gap-8">
+                    <div>
+                        <span class="font-display text-3xl font-bold text-ink dark:text-white" data-count-to="{{ propertys|length }}">0</span>
+                        <p class="text-stone text-xs mt-1" data-lang="stat_properties_short">амвол ёфт шуд</p>
+                    </div>
+                    <div class="w-px h-10 bg-ink/10 dark:bg-white/10"></div>
+                    <div>
+                        <span class="font-display text-3xl font-bold text-ink dark:text-white" data-count-to="12">0</span>
+                        <p class="text-stone text-xs mt-1">шаҳр таҳти хизматрасонӣ</p>
+                    </div>
                 </div>
-
-                <div class="relative w-full">
-                    <label data-lang="label_district" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Ноҳия-</label>
-                    <input type="text" name="qu" value="{{ request.GET.qu|default:'' }}" placeholder="Ноҳия..." class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
+            </div>
+            <div class="lg:col-span-3 order-1 lg:order-2">
+                <div class="reveal in relative">
+                    <div class="absolute -inset-3 border border-gold/40 rounded-3xl hidden sm:block"></div>
+                    <div class="img-zoom rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_30px_70px_-30px_rgba(11,61,46,0.35)]">
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80" alt="Хонаи муосир" class="w-full h-64 sm:h-96 object-cover">
+                    </div>
                 </div>
-
-                <div class="relative w-full">
-                    <label data-lang="label_price_from" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Нарх аз-</label>
-                    <input type="number" name="min_price" value="{{ request.GET.min_price|default:'' }}" placeholder="Мин" class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
-                </div>
-
-                <div class="relative w-full">
-                    <label data-lang="label_price_to" class="block text-xs font-bold text-gray-500 uppercase mb-1 px-1">Нарх то-</label>
-                    <input type="number" name="max_price" value="{{ request.GET.max_price|default:'' }}" placeholder="Макс" class="w-full px-3 py-2 text-gray-800 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:border-indigo-500 text-sm">
-                </div>
-
-                <div class="w-full sm:col-span-2">
-                    <button type="submit" data-lang="search_btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-[9px] rounded-xl font-semibold transition text-sm flex items-center justify-center gap-2 shadow-md shadow-indigo-200">
-                        <i class="fa-solid fa-magnifying-glass"></i> Ҷустуҷӯ
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Тарафи рост — акси даврзананда -->
-        <div class="w-full lg:w-2/5 flex items-center justify-center">
-            <div class="relative w-56 h-56 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center" style="animation: spin-slow 26s linear infinite;">
-                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80"
-                     alt="Бинои баландошёна"
-                     class="w-[88%] h-[88%] rounded-full object-cover border-4 border-white/30"
-                     style="animation: spin-slow-reverse 26s linear infinite;">
             </div>
         </div>
-
     </div>
-</div>
 
-<style>
-    @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes spin-slow-reverse { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-</style>
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-
-    <!-- Тугмаи чат -->
-<button id="chat-btn" class="fixed bottom-6 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg z-50 hover:scale-110 transition">
-    <i class="fa-solid fa-robot text-xl"></i>
-</button>
-
-<!-- Окнаи чат -->
-<div id="chat-window" class="hidden fixed bottom-24 right-6 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
-    <div class="p-4 bg-indigo-600 text-white font-bold flex justify-between">
-        <span>Comfort AI  for help you</span>
-        <button onclick="document.getElementById('chat-window').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
+    <!-- ============ SEARCH ============ -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <form method="GET" action="{% url 'home' %}" class="reveal in bg-white dark:bg-white/5 p-5 sm:p-6 rounded-2xl shadow-soft border border-ink/5 dark:border-white/10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+            <div><label class="block text-xs font-bold text-stone uppercase mb-1 px-1">Шаҳр</label><input type="text" name="q" value="{{ request.GET.q }}" placeholder="Душанбе..." class="w-full px-3 py-2.5 bg-cream dark:bg-white/5 dark:text-white rounded-lg border border-ink/10 dark:border-white/10 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm transition"></div>
+            <div><label class="block text-xs font-bold text-stone uppercase mb-1 px-1">Ноҳия</label><input type="text" name="qu" value="{{ request.GET.qu }}" placeholder="Ноҳия..." class="w-full px-3 py-2.5 bg-cream dark:bg-white/5 dark:text-white rounded-lg border border-ink/10 dark:border-white/10 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm transition"></div>
+            <div><label class="block text-xs font-bold text-stone uppercase mb-1 px-1">Нарх аз</label><input type="number" name="min_price" value="{{ request.GET.min_price }}" placeholder="Мин" class="w-full px-3 py-2.5 bg-cream dark:bg-white/5 dark:text-white rounded-lg border border-ink/10 dark:border-white/10 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm transition"></div>
+            <div><label class="block text-xs font-bold text-stone uppercase mb-1 px-1">Нарх то</label><input type="number" name="max_price" value="{{ request.GET.max_price }}" placeholder="Макс" class="w-full px-3 py-2.5 bg-cream dark:bg-white/5 dark:text-white rounded-lg border border-ink/10 dark:border-white/10 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm transition"></div>
+            <button type="submit" class="w-full gradient-btn text-white py-[11px] rounded-lg font-display font-semibold transition text-sm flex items-center justify-center gap-2"><i class="fa-solid fa-magnifying-glass"></i> <span data-lang="search_btn">Ҷустуҷӯ</span></button>
+        </form>
     </div>
-    <div id="chat-body" class="h-60 p-4 overflow-y-auto space-y-2 text-sm dark:text-gray-200"></div>
-    <div class="p-2 border-t dark:border-gray-700 flex">
-        <input id="chat-input" class="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white" placeholder="Савол диҳед...">
-        <button id="send-btn" class="ml-2 bg-indigo-600 text-white px-4 py-2 rounded-lg"><i class="fa-solid fa-paper-plane"></i></button>
+
+    <!-- ============ CATEGORIES ============ -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div class="reveal in mb-8">
+            <p class="text-gold text-xs font-semibold uppercase tracking-[0.2em] mb-2">Категорияҳо</p>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink dark:text-white">Навъи амволро интихоб кунед</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="{% url 'property_search' %}?property_type=apartment" class="reveal in card-hover img-zoom relative rounded-2xl overflow-hidden h-48 flex items-end p-6">
+                <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent"></div>
+                <span class="relative font-display text-lg font-semibold text-white">Квартира</span>
+            </a>
+            <a href="{% url 'property_search' %}?property_type=house" class="reveal in card-hover img-zoom relative rounded-2xl overflow-hidden h-48 flex items-end p-6">
+                <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent"></div>
+                <span class="relative font-display text-lg font-semibold text-white">Ҳавлигӣ</span>
+            </a>
+            <a href="{% url 'property_search' %}?property_type=room" class="reveal in card-hover img-zoom relative rounded-2xl overflow-hidden h-48 flex items-end p-6">
+                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent"></div>
+                <span class="relative font-display text-lg font-semibold text-white">Ҳуҷра</span>
+            </a>
+        </div>
     </div>
-</div>
-    <h2 data-lang="sections_title" class="text-3xl font-bold text-gray-950 mb-8 border-b-2 border-indigo-600 inline-block pb-2">Амволҳои охирин</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {% for property in propertys %}
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
-            <div class="relative h-56 bg-gray-200">
-                {% if property.images.all %}
-                    <div class="flex overflow-x-auto space-x-4 pb-4 mb-8">
-                        {% for img in property.images.all %}
-                            <div class="flex-none w-64 h-64 rounded-2xl overflow-hidden shadow-lg">
-                                <img src="{{ img.image.url }}" alt="Property Image" class="w-full h-full object-cover">
+
+    <!-- ============ MAP SEARCH ============ -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div class="reveal in mb-8">
+            <p class="text-gold text-xs font-semibold uppercase tracking-[0.2em] mb-2" data-lang="map_title">Амволҳо дар харита</p>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink dark:text-white" data-lang="sections_title">Амволҳои охирин</h2>
+        </div>
+        <div id="properties-map" class="reveal in rounded-2xl overflow-hidden shadow-soft border border-ink/5 dark:border-white/10" style="height: 420px; background: #F4EFE6;"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        (function () {
+            const mapEl = document.getElementById('properties-map');
+            if (!mapEl || typeof L === 'undefined') return;
+
+            const map = L.map(mapEl).setView([38.5598, 68.7870], 6); // маркази Тоҷикистон
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 18,
+            }).addTo(map);
+
+            const goldIcon = L.divIcon({
+                className: '',
+                html: '<div style="background:#0B3D2E;width:14px;height:14px;border-radius:50%;border:3px solid #C9A24B;box-shadow:0 2px 6px rgba(0,0,0,.3);"></div>',
+                iconSize: [14, 14],
+                iconAnchor: [7, 7],
+            });
+
+            fetch('/api/properties-map/')
+                .then((res) => res.json())
+                .then((data) => {
+                    const properties = data.properties || [];
+                    if (!properties.length) return;
+                    const bounds = [];
+                    const lang = (localStorage.getItem('selectedLang') || 'tg').toLowerCase();
+                    const detailsLabel = (translations[lang] && translations[lang].map_view_details) || 'Details';
+
+                    properties.forEach((p) => {
+                        const marker = L.marker([p.lat, p.lng], { icon: goldIcon }).addTo(map);
+                        const imgHtml = p.image ? `<img src="${window.escapeHtml(p.image)}" style="width:100%;height:90px;object-fit:cover;border-radius:8px;margin-bottom:6px;">` : '';
+                        marker.bindPopup(`
+                            <div style="font-family:'Inter',sans-serif;min-width:160px;">
+                                ${imgHtml}
+                                <strong style="display:block;margin-bottom:2px;">${window.escapeHtml(p.title)}</strong>
+                                <span style="color:#0B3D2E;font-weight:700;">${Number(p.price).toLocaleString()} TJS</span><br>
+                                <span style="color:#8B8378;font-size:12px;">${window.escapeHtml(p.city)}${p.district ? ', ' + window.escapeHtml(p.district) : ''}</span><br>
+                                <a href="${window.escapeHtml(p.url)}" style="color:#C9A24B;font-weight:600;font-size:12px;">${window.escapeHtml(detailsLabel)} &rarr;</a>
                             </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                        <i class="fa-regular fa-image text-4xl"></i>
-                    </div>
-                {% endif %}
-                <span class="absolute top-4 left-4 bg-indigo-600 text-white text-xs font-bold uppercase px-3 py-1.5 rounded-full shadow-sm">
-                    {{ property.get_property_type_display }}
-                </span>
-            </div>
-            <p>......</p>
-            <p>......</p>
+                        `);
+                        bounds.push([p.lat, p.lng]);
+                    });
+                    if (bounds.length) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 13 });
+                })
+                .catch(() => {});
+        })();
+    </script>
 
-            <div class="p-6">
-                <div class="text-2xl font-bold text-indigo-600 mb-2">{{ property.price }} TJS</div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2 truncate shadow-sm">{{ property.title }}</h3>
-                <p class="text-gray-500 text-sm mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-location-dot text-indigo-500"></i> {{ property.city }}{% if property.district %}, {{ property.district }}{% endif %}
-                </p>
-
-                <div class="flex items-center justify-between text-gray-600 text-sm border-t pt-4 border-gray-100">
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-bed text-indigo-500"></i> {{ property.rooms }} <span data-lang="rooms">ҳуҷра</span></span>
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-ruler-combined text-indigo-500"></i> {{ property.area }} <span data-lang="area">м²</span></span>
-                </div>
+    <!-- ============ WHY CHOOSE US ============ -->
+    <div class="bg-white dark:bg-darkbg-card py-16 border-y border-ink/5 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal in text-center max-w-xl mx-auto mb-12">
+                <p class="text-gold text-xs font-semibold uppercase tracking-[0.2em] mb-2" data-lang="about_why_title">Чаро маҳз мо?</p>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink dark:text-white" data-lang="about_f1_title">Амнияти Пурра</h2>
             </div>
-            
-            <div class="px-6 pb-6 flex flex-col gap-3">
-                <div class="flex gap-2 items-center w-full">
-                    <a href="{% url 'property_detail' property.pk %}" data-lang="details" class="flex-grow text-center bg-gray-100 hover:bg-indigo-50 text-indigo-600 font-semibold py-2.5 rounded-xl transition text-sm">Муфассал</a>
-                    
-                    {% if user.is_authenticated %}
-                        {% if property.owner != user %}
-                            <button type="button" data-id="{{ property.id }}" class="favorite-btn p-2.5 rounded-xl transition flex items-center justify-center border {% if property.id in favorite_property_ids %}bg-red-50 text-red-500 border-red-200 is-favorite{% else %}bg-gray-100 text-gray-500 border-transparent hover:bg-red-50 hover:text-red-500{% endif %}" title="Маҳбубҳо">
-                                <i class="{% if property.id in favorite_property_ids %}fa-solid text-red-500{% else %}fa-regular{% endif %} fa-heart text-lg"></i>
-                            </button>
-                        {% else %}
-                            <span data-lang="my_ad" class="bg-indigo-50 text-indigo-600 px-3 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap" title="Ин эълони худи шумост">Эълони ман</span>
-                        {% endif %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                <div class="reveal in"><div class="w-14 h-14 rounded-full bg-cream dark:bg-white/5 flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-shield-halved text-emerald dark:text-gold"></i></div><h3 class="font-display font-semibold mb-1 text-ink dark:text-white text-sm">Тасдиқи ҳуҷҷатҳо</h3><p class="text-stone dark:text-gray-400 text-xs">Ҳамаи соҳибони амвол санҷида мешаванд.</p></div>
+                <div class="reveal in"><div class="w-14 h-14 rounded-full bg-cream dark:bg-white/5 flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-headset text-emerald dark:text-gold"></i></div><h3 class="font-display font-semibold mb-1 text-ink dark:text-white text-sm">Дастгирии доимӣ</h3><p class="text-stone dark:text-gray-400 text-xs">Ҷавоб бо се забон.</p></div>
+                <div class="reveal in"><div class="w-14 h-14 rounded-full bg-cream dark:bg-white/5 flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-comments text-emerald dark:text-gold"></i></div><h3 class="font-display font-semibold mb-1 text-ink dark:text-white text-sm">Тамос мустақим</h3><p class="text-stone dark:text-gray-400 text-xs">Бо соҳибхона мустақиман паём.</p></div>
+                <div class="reveal in"><div class="w-14 h-14 rounded-full bg-cream dark:bg-white/5 flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-map-location-dot text-emerald dark:text-gold"></i></div><h3 class="font-display font-semibold mb-1 text-ink dark:text-white text-sm">Пӯшиши васеъ</h3><p class="text-stone dark:text-gray-400 text-xs">Даҳҳо шаҳри Тоҷикистон.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ LATEST PROPERTIES ============ -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex items-end justify-between mb-10 flex-wrap gap-3">
+            <h2 class="reveal in font-display text-2xl sm:text-3xl font-bold text-ink dark:text-white" data-lang="sections_title">Амволҳои охирин</h2>
+            <a href="{% url 'property_search' %}" class="reveal in underline-grow text-emerald dark:text-gold font-semibold text-sm">Ҳамаро дидан &rarr;</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for property in propertys|slice:":6" %}
+            <div class="reveal in card-hover bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-ink/5 dark:border-white/10 overflow-hidden">
+                <div class="relative h-56 bg-gray-100 dark:bg-white/5 img-zoom">
+                    {% if property.images.first %}
+                        <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="w-full h-full object-cover">
                     {% else %}
-                        <a href="{% url 'login' %}" class="bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500 p-2.5 rounded-xl transition flex items-center justify-center">
-                            <i class="fa-regular fa-heart text-lg"></i>
-                        </a>
+                        <div class="w-full h-full flex items-center justify-center text-stone/40 dark:text-gray-600"><i class="fa-regular fa-image text-3xl"></i></div>
+                    {% endif %}
+                    <span class="absolute top-4 left-4 bg-gold text-white text-xs font-display font-semibold uppercase px-3 py-1.5 rounded-full">{{ property.get_property_type_display }}</span>
+                    {% if property.images.first and property.owner.phone_number and property.amenities and property.address_details %}
+                    <span class="absolute top-4 right-4 inline-flex items-center gap-1 bg-white/95 dark:bg-darkbg-card/95 text-emerald dark:text-gold text-[10px] font-bold uppercase px-2 py-1 rounded-full shadow-sm">
+                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i> <span data-lang="verified_label">Тасдиқшуда</span>
+                    </span>
+                    {% endif %}
+                    <label class="absolute bottom-4 right-4 flex items-center gap-1.5 bg-white/95 dark:bg-darkbg-card/95 px-2.5 py-1.5 rounded-lg shadow-sm cursor-pointer text-xs font-semibold text-ink dark:text-white">
+                        <input type="checkbox" class="compare-checkbox" data-property-id="{{ property.id }}">
+                        <span data-lang="compare_add">Муқоиса</span>
+                    </label>
+                </div>
+                <div class="p-6">
+                    <div class="text-2xl font-display font-bold text-emerald dark:text-gold mb-2">{{ property.price }} <span class="text-sm text-stone font-sans font-normal">TJS</span></div>
+                    <h3 class="text-lg font-semibold text-ink dark:text-gray-200 mb-2 truncate">{{ property.title }}</h3>
+                    <p class="text-stone dark:text-gray-400 text-sm mb-4 flex items-center gap-2"><i class="fa-solid fa-location-dot text-gold"></i> {{ property.city }}{% if property.district %}, {{ property.district }}{% endif %}</p>
+                    <div class="flex items-center justify-between text-stone dark:text-gray-400 text-sm border-t pt-4 border-ink/5 dark:border-white/10">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-bed text-gold"></i> {{ property.rooms }} <span data-lang="rooms">ҳуҷра</span></span>
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-ruler-combined text-gold"></i> {{ property.area }} м²</span>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 flex gap-2 items-center">
+                    <a href="{% url 'property_detail' property.pk %}" data-lang="details" class="flex-grow text-center bg-cream dark:bg-white/10 hover:bg-gold/10 text-emerald dark:text-white font-display font-semibold py-2.5 rounded-lg transition text-sm">Муфассал</a>
+                    {% if user.role != 'landlord' %}
+                    <form action="{% url 'toggle_favorite' property.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" name="toggle_favorite"
+                            aria-label="{% if property.id in favorite_property_ids %}Аз маҳбубҳо нест кардан{% else %}Илова ба маҳбубҳо{% endif %}"
+                            class="favorite-btn-demo p-2.5 rounded-lg transition flex items-center justify-center border active:scale-95 {% if property.id in favorite_property_ids %}is-favorite bg-red-50 text-red-500 border-red-200{% else %}bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400 border-transparent hover:bg-red-50 hover:text-red-500{% endif %}">
+                            <i class="{% if property.id in favorite_property_ids %}fa-solid text-red-500{% else %}fa-regular{% endif %} fa-heart text-lg" aria-hidden="true"></i>
+                        </button>
+                    </form>
                     {% endif %}
                 </div>
             </div>
+            {% empty %}
+            <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-16 bg-white dark:bg-white/5 rounded-2xl border border-dashed border-ink/10 dark:border-white/10">
+                <i class="fa-regular fa-folder-open text-4xl text-stone/40 dark:text-gray-600 mb-4"></i>
+                <p class="text-stone dark:text-gray-400 text-lg" data-lang="no_properties">Ҳеҷ амволе ёфт нашуд.</p>
+            </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
-            <p class="text-gray-500 text-lg" data-lang="no_properties">Ҳеҷ амволе ёфт нашуд.</p>
-        </div>
-        {% endfor %}
     </div>
-</div>
 
-<script>
-document.querySelectorAll('.favorite-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const propertyId = this.getAttribute('data-id');
-        const icon = this.querySelector('i');
-        
-        fetch(`/toggle-favorite/${propertyId}/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-                'X-Requested-With': 'XMLHttpRequest'
+    <script type="application/json" id="home-compare-data">
+[
+{% for property in propertys|slice:":6" %}{
+    "id": {{ property.id }},
+    "title": "{{ property.title|escapejs }}",
+    "price": {{ property.price|default:0 }},
+    "rooms": {{ property.rooms|default:0 }},
+    "area": {{ property.area|default:0 }},
+    "floor": {% if property.floor != None %}{{ property.floor }}{% else %}null{% endif %},
+    "city": "{{ property.city|default:""|escapejs }}",
+    "district": "{{ property.district|default:""|escapejs }}",
+    "type": "{{ property.get_property_type_display|escapejs }}",
+    "available": {{ property.is_available|yesno:"true,false" }},
+    "verified": {% if property.images.first and property.owner.phone_number and property.amenities and property.address_details %}true{% else %}false{% endif %},
+    "image": "{% if property.images.first %}{{ property.images.first.image.url|escapejs }}{% endif %}",
+    "url": "{% url 'property_detail' property.pk %}"
+}{% if not forloop.last %},{% endif %}
+{% endfor %}
+]
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.registerCompareData) {
+                window.registerCompareData(JSON.parse(document.getElementById('home-compare-data').textContent));
             }
-        })
-        .then(response => {
-            if (response.ok) {
-                if (this.classList.contains('is-favorite')) {
-                    this.classList.remove('is-favorite', 'bg-red-50', 'text-red-500', 'border-red-200');
-                    this.classList.add('bg-gray-100', 'text-gray-500', 'border-transparent');
-                    icon.classList.remove('fa-solid', 'text-red-500');
-                    icon.classList.add('fa-regular');
-                } else {
-                    this.classList.add('is-favorite', 'bg-red-50', 'text-red-500', 'border-red-200');
-                    this.classList.remove('bg-gray-100', 'text-gray-500', 'border-transparent');
-                    icon.classList.remove('fa-regular');
-                    icon.classList.add('fa-solid', 'text-red-500');
-                }
-            } else {
-                alert('Хатогӣ рӯй дод. Лутфан аз нав кӯшиш кунед.');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-});
-</script>
+        });
+    </script>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <div class="bg-white dark:bg-darkbg-card py-16 border-t border-ink/5 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal in text-center max-w-xl mx-auto mb-12">
+                <p class="text-gold text-xs font-semibold uppercase tracking-[0.2em] mb-2">Фикри муштариён</p>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink dark:text-white">Ба мо чӣ мегӯянд</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <blockquote class="reveal in card-hover bg-cream dark:bg-white/5 rounded-2xl p-8"><i class="fa-solid fa-quote-left text-gold text-xl mb-4"></i><p class="text-ink/70 dark:text-gray-300 text-sm leading-relaxed mb-6">Дар як ҳафта хонаи мувофиқ ёфтам.</p><footer class="font-display font-semibold text-sm text-ink dark:text-white">Ф. Раҳимов</footer></blockquote>
+                <blockquote class="reveal in card-hover bg-cream dark:bg-white/5 rounded-2xl p-8"><i class="fa-solid fa-quote-left text-gold text-xl mb-4"></i><p class="text-ink/70 dark:text-gray-300 text-sm leading-relaxed mb-6">Гузоштани эълон хеле осон буд.</p><footer class="font-display font-semibold text-sm text-ink dark:text-white">М. Каримова</footer></blockquote>
+                <blockquote class="reveal in card-hover bg-cream dark:bg-white/5 rounded-2xl p-8"><i class="fa-solid fa-quote-left text-gold text-xl mb-4"></i><p class="text-ink/70 dark:text-gray-300 text-sm leading-relaxed mb-6">Дизайни сайт равшан ва зебо аст.</p><footer class="font-display font-semibold text-sm text-ink dark:text-white">С. Назаров</footer></blockquote>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ CTA ============ -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="reveal in rounded-2xl bg-emerald px-8 py-16 text-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-[0.07]" style="background-image: radial-gradient(circle at 25% 30%, #C9A24B 0%, transparent 45%);"></div>
+            <h2 class="font-display text-white text-2xl sm:text-3xl font-bold max-w-xl mx-auto relative">Хонаи навбатии худро имрӯз ёбед</h2>
+            <p class="text-white/70 mt-4 max-w-md mx-auto relative text-sm">Ба ҳазорон корбари Comfort Home ҳамроҳ шавед.</p>
+            <div class="flex flex-wrap items-center justify-center gap-4 mt-8 relative">
+                <a href="{% url 'property_search' %}" class="rounded-lg bg-gold hover:bg-gold-dark text-white font-display font-semibold px-8 py-3.5 transition" data-lang="search_btn">Ҷустуҷӯи амвол</a>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="rounded-lg border border-white/30 hover:border-white text-white font-display font-semibold px-8 py-3.5 transition" data-lang="nav_register">Сабти ном</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Count-up (маҳз барои шумораҳои сарлавҳа)
+        document.querySelectorAll('[data-count-to]').forEach((el) => {
+            const target = parseInt(el.dataset.countTo, 10) || 0;
+            const cio = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const start = performance.now();
+                    const step = (now) => {
+                        const p = Math.min((now - start) / 1000, 1);
+                        el.textContent = Math.floor(p * target);
+                        if (p < 1) requestAnimationFrame(step); else el.textContent = target;
+                    };
+                    requestAnimationFrame(step);
+                    cio.unobserve(el);
+                });
+            }, { threshold: 0.5 });
+            cio.observe(el);
+        });
+    </script>
 
 {% endblock %}

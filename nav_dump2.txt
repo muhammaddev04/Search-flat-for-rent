@@ -1,0 +1,15 @@
+hidden lg:flex items-center gap-1">
+                    <a href="/" data-lang="nav_home" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Асосӣ</a>
+                    <a href="/about/" data-lang="nav_about" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Дар бораи мо</a>
+                    <a href="/my-properties/" data-lang="nav_properties" class="underline-grow px-4 py-2 text-ink/70 dark:text-gray-300 hover:text-emerald dark:hover:text-gold font-medium text-sm transition">Амволҳо</a>
+
+                    <div class="h-6 w-px bg-ink/10 dark:bg-gray-700 mx-2"></div> 
+                        
+                            <a href="/favorites/" data-lang="favorites_btn" class="flex items-center gap-2 px-4 py-2 rounded-lg text-ink/70 dark:text-gray-300 hover:bg-ink/5 dark:hover:bg-white/5 hover:text-emerald dark:hover:text-gold font-medium transition text-sm">
+                                <i class="fa-solid fa-heart"></i> Маҳбубҳо
+                            </a>
+                        
+
+                        
+
+                        <a href="/auth/logout/" data-lang="logout_btn" class="border border-ink/15 dark:border-white/10 text-ink/70 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-ink/5 dark:hover

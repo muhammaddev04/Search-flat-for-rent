@@ -1,43 +1,90 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h2 data-lang="search_res_title" class="text-3xl font-bold text-gray-950 mb-8 border-b-2 border-indigo-600 inline-block pb-2">Натиҷаҳои ҷустуҷӯ</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="flex items-end justify-between mb-8 flex-wrap gap-3">
+        <h2 data-lang="search_res_title" class="font-display text-3xl font-semibold text-ink dark:text-white border-b-2 border-primary inline-block pb-2">Натиҷаҳои ҷустуҷӯ</h2>
+        <span class="text-sm text-gray-400 font-mono">{{ propertys|length }}</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
         {% for property in propertys %}
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
-            <div class="relative h-48 bg-gray-200">
-                {% if property.images.all %}
-                    <img src="{{ property.images.first.image.url }}" class="w-full h-full object-cover">
+        <div class="card-hover bg-white dark:bg-darkbg-card rounded-2xl shadow-soft border border-black/5 dark:border-white/5 overflow-hidden hover:shadow-lifted transition">
+            <div class="relative h-48 bg-gray-100 dark:bg-white/5">
+                {% if property.images.first %}
+                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="w-full h-full object-cover">
                 {% else %}
-                    <div class="w-full h-full flex items-center justify-center text-gray-400"><i class="fa-regular fa-image text-3xl"></i></div>
+                    <div class="w-full h-full flex items-center justify-center text-gray-300 dark:text-gray-600"><i class="fa-regular fa-image text-3xl"></i></div>
                 {% endif %}
+                {% if not property.is_available %}
+                <span class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold uppercase px-2.5 py-1 rounded-full">Дастрас нест</span>
+                {% endif %}
+                {% if property.images.first and property.owner.phone_number and property.amenities and property.address_details %}
+                <span class="absolute top-3 left-3 inline-flex items-center gap-1 bg-white/95 dark:bg-darkbg-card/95 text-emerald dark:text-gold text-[10px] font-bold uppercase px-2 py-1 rounded-full shadow-sm">
+                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i> <span data-lang="verified_label">Тасдиқшуда</span>
+                </span>
+                {% endif %}
+                <label class="absolute bottom-3 right-3 flex items-center gap-1.5 bg-white/95 dark:bg-darkbg-card/95 px-2.5 py-1.5 rounded-lg shadow-sm cursor-pointer text-xs font-semibold text-ink dark:text-white">
+                    <input type="checkbox" class="compare-checkbox" data-property-id="{{ property.id }}">
+                    <span data-lang="compare_add">Муқоиса</span>
+                </label>
             </div>
             <div class="p-5">
-                <div class="text-xl font-bold text-indigo-600 mb-1">{{ property.price }} TJS</div>
-                <h3 class="text-lg font-bold text-gray-900 truncate">{{ property.title }}</h3>
-                <p class="text-gray-500 text-sm mt-1 mb-4"><i class="fa-solid fa-location-dot"></i> {{ property.city }}</p>
-                
-                <a href="{% url 'property_detail' property.pk %}" data-lang="details" class="block text-center bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-semibold py-2 rounded-xl transition text-sm">
+                <div class="font-display text-xl font-bold text-primary dark:text-primary-dark mb-1">{{ property.price }} <span class="text-sm font-sans font-semibold text-gray-400">TJS</span></div>
+                <h3 class="text-lg font-bold text-[#16233B] dark:text-white truncate">{{ property.title }}</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-accent"></i> {{ property.city }}{% if property.district %}, {{ property.district }}{% endif %}</p>
+
+                <a href="{% url 'property_detail' property.pk %}" data-lang="details" class="block text-center bg-primary-50 dark:bg-primary/20 hover:bg-primary-100 text-primary font-semibold py-2.5 rounded-xl transition text-sm">
                     Муфассал
                 </a>
+
+                {% if property.owner == request.user %}
+                <div class="flex gap-2 mt-3">
+                    <a href="{% url 'update_property' property.id %}" data-lang-title="edit_btn" class="flex-1 flex items-center justify-center gap-1.5 text-accent hover:text-white hover:bg-accent bg-accent-light/40 dark:bg-accent/10 p-2 rounded-lg transition text-sm font-medium" title="Таҳрир">
+                        <i class="fa-regular fa-pen-to-square"></i> <span data-lang="edit_btn">Таҳрир</span>
+                    </a>
+                    <a href="{% url 'delete_property' property.id %}" data-lang-title="delete_btn" class="flex-1 flex items-center justify-center gap-1.5 text-red-500 hover:text-white hover:bg-red-500 bg-red-50 dark:bg-red-500/10 p-2 rounded-lg transition text-sm font-medium" title="Нест кардан">
+                        <i class="fa-regular fa-trash-can"></i> <span data-lang="delete_btn">Нест кардан</span>
+                    </a>
+                </div>
+                {% endif %}
             </div>
-            <td class="p-4 text-right space-x-2">
-                <a href="{% url 'update_property' property.id %}" class="inline-block text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition" title="Таҳрир">
-                    <i class="fa-regular fa-pen-to-square text-base"></i>
-                </a>
-                <a href="{% url 'delete_property' property.id %}" class="inline-block text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition" title="Нест кардан">
-                    <i class="fa-regular fa-trash-can text-base"></i>
-                </a>
-            </td>
         </div>
         {% empty %}
-        <div class="col-span-3 text-center py-12">
-            <p data-lang="no_properties" class="text-gray-500 text-lg">Ҳеҷ амволе ёфт нашуд.</p>
+        <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-16 bg-white dark:bg-darkbg-card rounded-2xl border border-dashed border-black/10 dark:border-white/10">
+            <i class="fa-regular fa-folder-open text-4xl text-gray-300 dark:text-gray-600 mb-4"></i>
+            <p data-lang="no_properties" class="text-gray-500 dark:text-gray-400 text-lg">Ҳеҷ амволе ёфт нашуд.</p>
         </div>
         {% endfor %}
     </div>
 </div>
+
+<script type="application/json" id="search-compare-data">
+[
+{% for property in propertys %}{
+    "id": {{ property.id }},
+    "title": "{{ property.title|escapejs }}",
+    "price": {{ property.price|default:0 }},
+    "rooms": {{ property.rooms|default:0 }},
+    "area": {{ property.area|default:0 }},
+    "floor": {% if property.floor != None %}{{ property.floor }}{% else %}null{% endif %},
+    "city": "{{ property.city|default:""|escapejs }}",
+    "district": "{{ property.district|default:""|escapejs }}",
+    "type": "{{ property.get_property_type_display|escapejs }}",
+    "available": {{ property.is_available|yesno:"true,false" }},
+    "verified": {% if property.images.first and property.owner.phone_number and property.amenities and property.address_details %}true{% else %}false{% endif %},
+    "image": "{% if property.images.first %}{{ property.images.first.image.url|escapejs }}{% endif %}",
+    "url": "{% url 'property_detail' property.pk %}"
+}{% if not forloop.last %},{% endif %}
+{% endfor %}
+]
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.registerCompareData) {
+            window.registerCompareData(JSON.parse(document.getElementById('search-compare-data').textContent));
+        }
+    });
+</script>
 
 {% endblock %}

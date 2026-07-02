@@ -10,22 +10,31 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=d9p02h4%+7wqkn($kf0twc45c+s$q_b=%%gvmoosexds4nhsm'
+# Хониш аз .env; агар набошад, як калиди муваққатии dev истифода мешавад
+# (ин калид ФАҚАТ барои local development аст, дар production ҳатман SECRET_KEY-и .env лозим аст).
+SECRET_KEY = os.getenv(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-dev-only-CHANGE-ME-in-.env',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',') if h.strip()]
 
 
 # Application definition
@@ -139,6 +148,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'muhammadmahmudzoda04@gmail.com'
-EMAIL_HOST_PASSWORD = 'uzqi wwvh xmre tcls'
+EMAIL_HOST_PASSWORD = 'qhkr empq evdc ifuf'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-

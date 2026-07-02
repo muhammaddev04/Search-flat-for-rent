@@ -1,7 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.db import models
-from django.contrib.auth.models import User
 
 
 class Property(models.Model):
@@ -22,6 +20,8 @@ class Property(models.Model):
     address_details = models.TextField()
     amenities = models.TextField()
     is_available = models.BooleanField(default=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -51,7 +51,7 @@ class Message(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.sender
-    
+        return f'{self.sender} -> {self.receiver}: {self.content[:30]}'

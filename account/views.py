@@ -3,7 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib import messages as flash
 from random import randint
+
 from .models import EmailConfirm, User
 
 
@@ -15,12 +17,17 @@ def send_email_confirmation(user):
     )
     try:
         send_mail(
-            subject='Тасдиқи почта',
-            message=f'{user.username}, хуш омадед! Рамзи тасдиқи шумо: {code}',
+            subject='Тасдиқи почта — Comfort Home',
+            message=f'{user.username}, хуш омадед ба Comfort Home! Рамзи тасдиқи шумо: {code}',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
+            fail_silently=False,
         )
     except Exception as e:
+        # ХАТОГИИ ЭҲТИМОЛӢ: агар EMAIL_BACKEND дар settings.py танзим нашуда
+        # бошад, ин ҷо хомӯшона хато медиҳад ва корбар ҳеҷ гоҳ рамзро намегирад.
+        # Дар developmenт EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+        # хуб кор мекунад (рамз дар терминал чоп мешавад).
         print(e, '=== Хатои фиристодани почта ===')
 
 
@@ -29,8 +36,8 @@ def register_view(request):
         return redirect('home')
 
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         role = request.POST.get('role')
@@ -41,14 +48,16 @@ def register_view(request):
         if password1 != password2:
             return render(request, 'register.html', {'error': 'Рамзҳо мувофиқ нестанд'})
 
-        elif role not in ['landlord', 'tenant']:
-            # Муҳофизат: admin ҳаргиз аз ин форм қабул намешавад
+        if len(password1) < 8:
+            return render(request, 'register.html', {'error': 'Рамз бояд ҳадди ақал 8 аломат бошад'})
+
+        if role not in ['landlord', 'tenant']:
             return render(request, 'register.html', {'error': 'Нақши нодуруст'})
 
-        elif User.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             return render(request, 'register.html', {'error': 'Ин номи корбар аллакай вуҷуд дорад'})
 
-        elif User.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             return render(request, 'register.html', {'error': 'Ин почта аллакай сабт шудааст'})
 
         user = User.objects.create_user(
@@ -67,8 +76,8 @@ def register_view(request):
 
 def confirm_email(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        code = request.POST.get('code')
+        email = request.POST.get('email', '').strip()
+        code = request.POST.get('code', '').strip()
 
         user = User.objects.filter(email=email).first()
         if not user:
@@ -81,8 +90,27 @@ def confirm_email(request):
 
         user.is_active = True
         user.save()
-        confirm_code.delete()  # рамз як бора истифода мешавад
+        confirm_code.delete()
+        flash.success(request, 'Почтаи шумо тасдиқ шуд! Акнун ворид шавед.')
         return redirect('login')
+
+    return render(request, 'confirm.html')
+
+
+def resend_confirmation(request):
+    """
+    ФУНКСИЯИ НАВ: агар рамз ба почта нарасад ё вақташ гузашта бошад,
+    корбар метавонад бе сабти номи такрорӣ рамзи навро дархост кунад.
+    """
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        user = User.objects.filter(email=email, is_active=False).first()
+        if user:
+            send_email_confirmation(user)
+            flash.success(request, 'Рамзи нав фиристода шуд.')
+        else:
+            flash.error(request, 'Ин почта ёфт нашуд ё аллакай тасдиқ шудааст.')
+        return render(request, 'confirm.html', {'user': user})
 
     return render(request, 'confirm.html')
 
@@ -104,9 +132,10 @@ def login_view(request):
             return render(request, 'login.html', {'error': 'Аввал почтаи худро тасдиқ кунед'})
 
         login(request, user)
-        return redirect('home')
+        next_url = request.POST.get('next') or request.GET.get('next')
+        return redirect(next_url or 'home')
 
-    return render(request, 'login.html')
+    return render(request, 'login.html', {'next': request.GET.get('next', '')})
 
 
 @login_required
@@ -126,6 +155,17 @@ def profile_view(request):
             request.user.photo = photo
 
         request.user.save()
+        flash.success(request, 'Профил нав карда шуд.')
         return redirect('profile')
 
-    return render(request, 'profile.html')
+    # Омори вобаста ба нақш — фақат барои намоиш, ба модели алоҳида ниёз надорад,
+    # чунки User аллакай майдони `role`-ро дорад.
+    stats = {}
+    if request.user.role == 'landlord':
+        from property.models import Property
+        stats['property_count'] = Property.objects.filter(owner=request.user).count()
+    elif request.user.role == 'tenant':
+        from property.models import Favorite
+        stats['favorite_count'] = Favorite.objects.filter(user=request.user).count()
+
+    return render(request, 'profile.html', {'stats': stats})
